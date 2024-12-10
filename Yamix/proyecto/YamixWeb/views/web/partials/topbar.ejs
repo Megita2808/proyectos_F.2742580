@@ -1,0 +1,90 @@
+<nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+    <a href="" class="navbar-brand">
+        <h1 class="m-0 display-4 font-weight-bold text-uppercase text-white">YAMIX</h1>
+    </a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+        <div class="navbar-nav ml-auto p-4 bg-secondary">
+                <a href="/" class="nav-item nav-link">Inicio</a>
+                <a href="/catalogo" class="nav-item nav-link">Catalogo</a>
+            <% if (!permisos || permisos.length === 0) { %>
+                <!-- Enlaces para usuarios no autenticados -->
+                <a href="/login" class="nav-item nav-link">Iniciar Sesión</a>
+                <a href="/register" class="nav-item nav-link">Inscribirme</a>
+            <% } else { %>
+                <!-- Enlaces para usuarios autenticados -->
+                <% if (permisos.includes('perfil')) { %>
+                    <a href="/perfil" class="nav-item nav-link">Perfil</a>
+                <% } %>
+                <% if (permisos.includes('calendario estudiante') || permisos.includes('calendario profesor')) { %>
+                    <a href="/calendarioUser" class="nav-item nav-link">Calendario</a>
+                <% } %>
+                <% if (permisos.includes('dashboard')) { %>
+                    <a href="/dashboard" class="nav-item nav-link">Admin</a>
+                <% } %>
+                <% if (permisos.includes('catalogo estudiante')) { %>
+                    <a href="/catalogo" class="nav-item nav-link">Catálogo</a>
+                <% } %>
+                <% if (permisos.includes('asistencia profesor')) { %>
+                  <a href="/asistenciaProfe" class="nav-item nav-link">Asistencia</a>
+              <% } %>
+              <% if (permisos.includes('asistencia')) { %>
+                  <a href="/asistencia" class="nav-item nav-link">Asistencia</a>
+              <% } %>                  
+                <a href="/logout" id="logout-link" class="nav-item nav-link">Salir</a>
+            <% } %>
+        </div>
+    </div>
+</nav>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById("logout-link").addEventListener("click", async (event) => {
+        event.preventDefault(); // Prevenir la navegación predeterminada
+    
+        try {
+            const response = await fetch("http://yamix.online/logout", {
+                method: "GET", // Cambia a GET si tu API maneja logout de esa manera
+                credentials: "include", // Asegura que las cookies sean enviadas
+            });
+    
+            if (response.ok) {
+                // Mostrar alerta de éxito con cierre automático
+                Swal.fire({
+                    icon: "success",
+                    title: "Deslogueo exitoso",
+                    text: "Has salido correctamente de tu cuenta.",
+                    timer: 3000, // Tiempo en milisegundos (3 segundos)
+                    showConfirmButton: false, // No mostrar botón de confirmación
+                }).then(() => {
+                    // Redirigir después de cerrar la alerta automáticamente
+                    window.location.href = "/";
+                });
+            } else {
+                // Mostrar alerta de error
+                const errorData = await response.json();
+                Swal.fire({
+                    icon: "error",
+                    title: "Error al desloguear",
+                    text: errorData.message || "Ocurrió un error al intentar cerrar sesión.",
+                    timer: 3000, // Tiempo en milisegundos (3 segundos)
+                    showConfirmButton: false,
+                });
+            }
+        } catch (error) {
+            // Manejo de errores en caso de fallo de red
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudo establecer conexión con el servidor.",
+                timer: 3000, // Tiempo en milisegundos (3 segundos)
+                showConfirmButton: false,
+            });
+        }
+    });
+    </script>

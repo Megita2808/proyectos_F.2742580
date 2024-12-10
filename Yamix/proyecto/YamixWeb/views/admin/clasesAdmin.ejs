@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+    <%- include('partials/scripts') %>
+    <style>
+        .icon-btn {
+                background-color: transparent;
+                border: none;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+
+            .icon-btn:hover {
+                color: #ddd;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_sidebar.html -->
+        <%- include('partials/sidebar') %>
+            <!-- partial -->
+            <div class="container-fluid page-body-wrapper">
+                <!-- partial:../../partials/_navbar.html -->
+                <%- include('partials/topbar') %>
+                    <!-- partial -->
+                    <div class="main-panel">
+                        <div class="content-wrapper">
+                            <div class="col-lg-12 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h3 class="card-title">Clases</h3>
+                                            <div>
+                                                <button id="exportPdf" class="btn btn-outline-secondary btn-fw">
+                                                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                                                </button>
+                                                <button class="btn btn-outline-secondary btn-fw" onclick="exportToExcel()">
+                                                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                                                </button>
+                                                <button class="btn btn-outline-secondary btn-fw" data-toggle="modal"
+                                                    data-target="#addModal">
+                                                    <i class="fas fa-plus"></i> Agregar
+                                                </button>
+        
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="miTabla" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th>Curso</th>
+                                                        <th>Hora Inicio</th>
+                                                        <th>Hora Final</th>
+                                                        <th>Instructor</th>
+                                                        <th>Estado</th>
+                                                        <th>Estudiantes</th>
+                                                        <th>Acción</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (Array.isArray(data) && data.length> 0) { %>
+                                                        <% data.forEach(clase=> { %>
+                                                            <tr>
+
+                                                                <td>
+                                                                    <%= clase.nombre_curso %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= clase.hora_inicio %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= clase.hora_final %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= clase.nombre_usuario %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <%= clase.estado %>
+                                                                </td>
+                                                                <td>
+                                                                    <button class="button-iconn" data-bs-toggle="modal"
+                                                                        data-bs-target="#editEstudiantesModal"
+                                                                        data-id="<%= clase.id_clase %>">
+                                                                        <i class="fas fa-plus"></i>
+                                                                    </button>
+                                                                </td>
+                                                                <td>
+                                                                    <button type="button" class="button-iconn"
+                                                                        data-toggle="modal" data-target="#editModal"
+                                                                        data-id="<%= clase.id_clase %>"
+                                                                        data-id_curso="<%= clase.id_curso %>"
+                                                                        data-hora-inicio="<%= clase.hora_inicio %>"
+                                                                        data-hora-final="<%= clase.hora_final %>"
+                                                                        data-usuario="<%= clase.id_usuario || 'sin profesor' %>"
+                                                                        data-estado="<%= clase.estado %>">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </button>
+
+                                                                    <!-- Botón para inactivar -->
+                                                                    <% if (clase.estado === 'activo') { %>
+                                                                        <button type="button" class="icon-btn"
+                                                                                data-id="<%= clase.id_clase %>"
+                                                                                data-id_curso="<%= clase.id_curso %>"
+                                                                                data-hora-inicio="<%= clase.hora_inicio %>"
+                                                                                data-hora-final="<%= clase.hora_final %>"
+                                                                                data-usuario="<%= clase.id_usuario || 'sin profesor' %>"
+                                                                                data-estado="inactivo"
+                                                                                onclick="cambiarEstado(this)">
+                                                                            <i class="mdi mdi-block-helper"></i>
+                                                                        </button>
+                                                                    <% } %>
+
+                                                                    <!-- Botón para activar (enviar la solicitud directamente) -->
+                                                                    <% if (clase.estado === 'inactivo') { %>
+                                                                        <button type="button" class="icon-btn"
+                                                                                data-id="<%= clase.id_clase %>"
+                                                                                data-id_curso="<%= clase.id_curso %>"
+                                                                                data-hora-inicio="<%= clase.hora_inicio %>"
+                                                                                data-hora-final="<%= clase.hora_final %>"
+                                                                                data-usuario="<%= clase.id_usuario || 'sin profesor' %>"
+                                                                                data-estado="activo"
+                                                                                onclick="cambiarEstado(this)">
+                                                                            <i class="mdi mdi-check-circle-outline"></i>
+                                                                        </button>
+                                                                    <% } %>
+                                                                </td>
+                                                            </tr>
+                                                            <% }) %>
+                                                                <% } else { %>
+                                                                    <tr>
+                                                                        <td colspan="7">No hay clases disponibles</td>
+                                                                    </tr>
+                                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal estudiantes -->
+                            <div class="modal fade" id="editEstudiantesModal" tabindex="-1" role="dialog"
+                                aria-labelledby="editEstudiantesModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editEstudiantesModalLabel">Agregar estudiantes a
+                                                la clase</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="card-description">Selecciona los estudiantes que deseas asignar a
+                                                la clase</p>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h6>Estudiantes Asignados</h6>
+                                                    <div id="assignedStudentsContainer">
+                                                        <!-- Estudiantes asignados se agregarán aquí -->
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6>Estudiantes No Asignados</h6>
+                                                    <div id="unassignedStudentsContainer">
+                                                        <!-- Estudiantes no asignados se agregarán aquí -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-dark"
+                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="button" class="btn btn-dark"
+                                                    id="saveStudentsButton">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+                                aria-labelledby="addModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addModalLabel">Agregar Clase</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="addForm" action="/agregar_clase" method="post">
+                                                <div class="form-group">
+                                                    <label for="addIdCurso">Curso</label>
+
+                                                    <select name="id_curso" class="form-control" id="addIdCurso"
+                                                        required>
+                                                        <option value="" disabled selected>Seleccione un curso</option>
+                                                        <% cursos.forEach(curso=> { %>
+                                                            <option value="<%= curso.id_curso %>">
+                                                                <%= curso.nombre_curso %>
+                                                            </option>
+                                                            <% }); %>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="addHoraInicio">Hora Inicio</label>
+                                                    <input type="time" name="hora_inicio" class="form-control"
+                                                        id="addHoraInicio" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="addHoraFinal">Hora Final</label>
+                                                    <input type="time" name="hora_final" class="form-control"
+                                                        id="addHoraFinal" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="addIdUsuario">Profesor</label>
+                                                    <select name="id_usuario" class="form-control" id="addIdProfesor"
+                                                        required>
+                                                        <option value="" disabled selected>Seleccione un profesor
+                                                        </option>
+                                                        <% profesores.forEach(profesor=> { %>
+                                                            <option value="<%= profesor.id_usuario %>">
+                                                                <%= profesor.nombre_usuario %>
+                                                            </option>
+                                                            <% }); %>
+                                                    </select>
+
+                                                </div>
+                                                <div hidden>
+                                                    <label for="addEstado">Estado</label>
+                                                    <select name="estado" class="form-control" id="addEstado" required>
+                                                        <option value="activo">Activo</option>
+                                                        <option value="inactivo">Inactivo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-dark mr-2"
+                                                        data-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-dark">Agregar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <!-- Modal para editar clase -->
+                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
+                                aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Editar Clase</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="editForm" action="/actualizar_clase" method="post">
+                                                <input type="hidden" name="id_clase" id="editIdClase">
+
+                                                <div class="form-group">
+                                                    <label for="id_curso">Curso</label>
+                                                    <select name="id_curso" class="form-control" id="id_curso" required>
+                                                        <option value="" disabled selected>Seleccione un curso</option>
+                                                        <% cursos.forEach(curso=> { %>
+                                                            <option value="<%= curso.id_curso %>">
+                                                                <%= curso.nombre_curso %>
+                                                            </option>
+                                                            <% }); %>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editHoraInicio">Hora Inicio</label>
+                                                    <input type="time" name="hora_inicio" class="form-control"
+                                                        id="editHoraInicio" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editHoraFinal">Hora Final</label>
+                                                    <input type="time" name="hora_final" class="form-control"
+                                                        id="editHoraFinal" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editIdUsuario">Profesor</label>
+                                                    <select name="id_usuario" class="form-control" id="editIdUsuario"
+                                                        required>
+                                                        <option value="" disabled selected>Seleccione un profesor
+                                                        </option>
+                                                        <% profesores.forEach(profesor=> { %>
+                                                            <option value="<%= profesor.id_usuario %>">
+                                                                <%= profesor.nombre_usuario %>
+                                                            </option>
+                                                            <% }); %>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editEstado">Estado</label>
+                                                    <select name="estado" class="form-control" id="editEstado" required>
+                                                        <option value="activo">Activo</option>
+                                                        <option value="inactivo">Inactivo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-dark mr-2"
+                                                        data-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-dark">Actualizar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- main-panel ends -->
+                        </div>
+                        <!-- page-body-wrapper ends -->
+                        <!-- plugins:js -->
+                    </div>
+
+                    <script>
+                        function cambiarEstado(button) {
+                        const idClase = $(button).data('id'); // ID de la clase
+                        const formData = {
+                            id_curso: $(button).data('id_curso'), // ID del curso
+                            hora_inicio: $(button).data('hora-inicio'), // Hora de inicio
+                            hora_final: $(button).data('hora-final'), // Hora final
+                            id_usuario: $(button).data('usuario'), // ID del usuario
+                            estado: $(button).data('estado') // Nuevo estado (activo o inactivo)
+                        };
+
+                        // Validación de horarios
+                        if (!validateTime(formData.hora_inicio, formData.hora_final)) return;
+
+                        $('#spinner').show(); // Mostrar spinner
+
+                        fetch(`/actualizar_clase/${idClase}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(formData),
+                        })
+                            .then(response => response.json()) // Obtener respuesta JSON
+                            .then(data => {
+                                $('#spinner').hide(); // Ocultar spinner
+
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Éxito',
+                                        text: data.message || 'Clase actualizada correctamente.',
+                                        confirmButtonText: 'Aceptar'
+                                    }).then(() => {
+                                        window.location.reload(); // Recargar la página
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: data.message || 'Ocurrió un error al actualizar la clase.',
+                                        confirmButtonText: 'Aceptar'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                $('#spinner').hide(); // Ocultar spinner
+
+                                console.error('Error al actualizar el estado de la clase:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: error.message || 'Error desconocido al actualizar la clase.',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            });
+                    }
+
+                    // Función para validar los horarios
+                    function validateTime(horaInicio, horaFinal) {
+                        const start = new Date(`1970-01-01T${horaInicio}`);
+                        const end = new Date(`1970-01-01T${horaFinal}`);
+                        if (end <= start) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Horario inválido',
+                                text: 'La hora de inicio debe ser anterior a la hora final.',
+                                confirmButtonText: 'Aceptar'
+                            });
+                            return false;
+                        }
+                        return true;
+                    }
+                    </script>
+                                      
+                    
+                    <script>
+                           
+                           $(document).ready(function () {
+    console.log("Documento listo");
+
+    // Guardar valores originales al cargar el formulario
+    let originalHoraInicio = "";
+    let originalHoraFinal = "";
+
+    $('#editForm').on('focusin', function () {
+        // Obtener valores originales
+        originalHoraInicio = $('#editHoraInicio').val();
+        originalHoraFinal = $('#editHoraFinal').val();
+    });
+
+    // Función para validar el tiempo
+    function validateTime(horaInicio, horaFinal) {
+        const startHour = parseInt(horaInicio.split(":")[0], 10);
+        const endHour = parseInt(horaFinal.split(":")[0], 10);
+
+        // Validar si la hora de inicio es antes de las 8 AM o después de las 10 PM
+        if (startHour < 8 || startHour >= 22) {
+            alert("La hora de inicio debe estar entre las 08:00 AM y las 10:00 PM.");
+            return false;
+        }
+
+        // Validar si la hora de finalización es antes de las 8 AM o después de las 10 PM
+        if (endHour < 8 || endHour >= 22) {
+            alert("La hora de finalización debe estar entre las 08:00 AM y las 10:00 PM.");
+            return false;
+        }
+
+        // Validar que la clase dure exactamente 2 horas
+        const inicio = new Date(`1970-01-01T${horaInicio}:00`);
+        const final = new Date(`1970-01-01T${horaFinal}:00`);
+        const diff = (final - inicio) / (1000 * 60 * 60); // Diferencia en horas
+
+        if (diff !== 2) {
+            alert("La clase debe durar exactamente 2 horas.");
+            return false;
+        }
+
+        return true;
+    }
+                    
+                            
+                                                // Código para la modal de edición de estudiantes
+                            $('#editEstudiantesModal').on('show.bs.modal', async function(event) {
+                                const button = $(event.relatedTarget);
+                                const claseId = button.data('id');
+
+                                const assignedStudentsContainer = $('#assignedStudentsContainer');
+                                const unassignedStudentsContainer = $('#unassignedStudentsContainer');
+                                assignedStudentsContainer.empty();
+                                unassignedStudentsContainer.empty();
+
+                                try {
+                                    const response = await fetch('/todos_estudiantes');
+                                    if (!response.ok) throw new Error('Error en la respuesta de estudiantes');
+                                    const estudiantes = await response.json();
+
+                                    const assignedResponse = await fetch(`/estudiantes_clases/${claseId}`);
+                                    if (!assignedResponse.ok) throw new Error('Error en la respuesta de estudiantes asignados');
+                                    const assignedEstudiantes = await assignedResponse.json();
+
+                                    estudiantes.forEach(estudiante => {
+                                        const nombreCompleto = estudiante.nombre_completo ? estudiante.nombre_completo.charAt(0).toUpperCase() + estudiante.nombre_completo.slice(1) : 'Nombre no disponible';
+                                        const checkboxHtml = `
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="estudiante-${estudiante.id_usuario}" data-estudiante-id="${estudiante.id_usuario}">
+                                                <label class="form-check-label" for="estudiante-${estudiante.id_usuario}">
+                                                    ${nombreCompleto}
+                                                </label>
+                                            </div>
+                                        `;
+                                        if (assignedEstudiantes.some(assigned => assigned.id_usuario === estudiante.id_usuario)) {
+                                            assignedStudentsContainer.append(checkboxHtml);
+                                            $(`#estudiante-${estudiante.id_usuario}`).prop('checked', true);
+                                        } else {
+                                            unassignedStudentsContainer.append(checkboxHtml);
+                                        }
+                                    });
+
+
+                                    $('#editEstudiantesModal').data('clase-id', claseId);
+                                } catch (error) {
+                                    console.error('Error al obtener estudiantes:', error);
+                                }
+                            });
+
+                    
+                            // Evento para guardar estudiantes seleccionados
+                            $('#saveStudentsButton').on('click', function() {
+                                const claseId = $('#editEstudiantesModal').data('clase-id');
+                                const estudiantesSeleccionados = [];
+                    
+                                $('#assignedStudentsContainer input[type="checkbox"], #unassignedStudentsContainer input[type="checkbox"]').each(function() {
+                                    if ($(this).is(':checked')) {
+                                        estudiantesSeleccionados.push($(this).data('estudiante-id'));
+                                    }
+                                });
+                    
+                                fetch('/actualizar_estudiantes', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ claseId, estudiantes: estudiantesSeleccionados })
+                                })
+                                .then(response => response.ok ? response.json() : Promise.reject('Error en la API'))
+                                .then(data => {
+                                    $('#editEstudiantesModal').modal('hide');
+                                    location.reload();
+                                })
+                                .catch(error => console.error('Error al guardar estudiantes:', error));
+                            });
+                    
+                            // Evento para abrir la modal de edición de clase
+                            $('#miTabla').on('click', '.button-iconn[data-toggle="modal"]', function() {
+                                const idClase = $(this).data('id');
+                                const idCurso = $(this).data('id_curso');
+                                const horaInicio = $(this).data('hora-inicio');
+                                const horaFinal = $(this).data('hora-final');
+                                const idUsuario = $(this).data('usuario');
+                                const estado = $(this).data('estado');
+                    
+                                $('#editIdClase').val(idClase);
+                                $('#editHoraInicio').val(horaInicio);
+                                $('#editHoraFinal').val(horaFinal);
+                                $('#id_curso').val(idCurso);
+                                $('#editIdUsuario').val(idUsuario);
+                                $('#editEstado').val(estado);
+                    
+                                $('#editModal').modal('show');
+                            });
+
+// Editar formulario
+$('#editForm').on('submit', function (event) {
+    event.preventDefault(); // Evitar el envío del formulario por defecto
+
+    // Obtener los datos del formulario
+    const idClase = $('#editIdClase').val();
+    const formData = {
+        id_curso: $('#id_curso').val(),
+        hora_inicio: $('#editHoraInicio').val(),
+        hora_final: $('#editHoraFinal').val(),
+        id_usuario: $('#editIdUsuario').val(),
+        estado: $('#editEstado').val()
+    };
+
+    // Validación de horarios
+    if (!validateTime(formData.hora_inicio, formData.hora_final)) return;
+
+    // Mostrar el spinner mientras se procesa la solicitud
+    $('#spinner').show();
+
+    // Realizar la solicitud de actualización
+    fetch(`/actualizar_clase/${idClase}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Ya hay una clase con el mismo horario.');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Ocultar el spinner después de recibir la respuesta
+        $('#spinner').hide();
+
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Clase actualizada exitosamente',
+                text: 'La clase se ha actualizado correctamente.',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                window.location.reload(); // Recargar la página para reflejar los cambios
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message || 'Error desconocido al actualizar',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
+    .catch(error => {
+        // Ocultar el spinner en caso de error
+        $('#spinner').hide();
+
+        console.error('Error al actualizar la clase:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Ocurrió un error al actualizar la clase.',
+            confirmButtonText: 'Aceptar'
+        });
+    });
+});
+
+// Limpiar el modal y cerrar cuando se cierre el modal
+$('#editModal').on('hidden.bs.modal', function() {
+    $('#editForm')[0].reset();  // Resetea los valores del formulario
+    $('#spinner').hide();  // Ocultar el spinner al cerrar el modal
+});
+
+// Botón "Cancelar" para cerrar el modal
+$('.btn-dark[data-dismiss="modal"]').on('click', function() {
+    $('#editModal').modal('hide');
+});
+
+//agregar form
+$('#addForm').on('submit', function(event) { 
+    event.preventDefault();
+
+    const formData = {
+        id_curso: $('#addIdCurso').val(),
+        hora_inicio: $('#addHoraInicio').val(),
+        hora_final: $('#addHoraFinal').val(),
+        id_usuario: $('#addIdProfesor').val(),
+        estado: $('#addEstado').val()
+    };
+
+
+    if (!validateTime(formData.hora_inicio, formData.hora_final)) return;
+
+    fetch('/agregar_clase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Error al agregar la clase');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Clase agregada exitosamente',
+                text: 'La clase se ha agregado correctamente.',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                window.location.reload();  
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message || 'Error desconocido al agregar',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error al agregar la clase:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'paila ' + error.message,
+            confirmButtonText: 'Aceptar'
+        });
+    });
+});
+
+
+function validateTime(horaInicio, horaFinal) {
+    console.log('Validando horas...');
+    const startHour = parseInt(horaInicio.split(":")[0], 10);
+    const endHour = parseInt(horaFinal.split(":")[0], 10);
+
+    if (startHour < 8 || startHour >= 22) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hora de inicio inválida',
+            text: 'La hora de inicio debe estar entre las 08:00 AM y las 10:00 PM.',
+            confirmButtonText: 'Aceptar'
+        });
+        return false;
+    }
+
+    if (endHour < 8 || endHour >= 22) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hora de finalización inválida',
+            text: 'La hora de finalización debe estar entre las 08:00 AM y las 10:00 PM.',
+            confirmButtonText: 'Aceptar'
+        });
+        return false;
+    }
+
+    const inicio = new Date(`1970-01-01T${horaInicio}:00`);
+    const final = new Date(`1970-01-01T${horaFinal}:00`);
+    
+    if (final <= inicio) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hora de finalización inválida',
+            text: 'La hora de finalización no puede ser inferior a la hora de inicio.',
+            confirmButtonText: 'Aceptar'
+        });
+        return false;
+    }
+
+    return true;
+}
+});
+//eliminar                                
+window.confirmarEliminacion = function(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta clase?')) {
+        fetch(`/eliminar_clase/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Clase eliminada exitosamente',
+                    text: 'La clase se ha eliminado correctamente.',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    window.location.reload(); 
+                });
+            } else {
+         
+                let errorMessage = 'Error desconocido al eliminar la clase.';
+                let errorTitle = 'Error';
+
+                if (data.error === 'No se puede eliminar la clase porque tiene estudiantes asignados.') {
+                    errorMessage = 'Esta clase ya tiene estudiantes asignados y no puede ser eliminada.';
+                    errorTitle = 'No se puede eliminar la clase';
+                } else if (data.error === 'No se puede eliminar la clase porque tiene registros en la tabla de asistencias.') {
+                    errorMessage = 'Esta clase tiene registros en la tabla de asistencias, lo cual impide su eliminación.';
+                    errorTitle = 'No se puede eliminar la clase';
+                }
+
+
+                Swal.fire({
+                    icon: 'error',
+                    title: errorTitle,
+                    text: errorMessage,
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error al eliminar la clase:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al intentar eliminar la clase. Por favor, intenta nuevamente.',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    }
+};
+document.getElementById('exportPdf').addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf; 
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = 'img/yamix_logo_mini.png';
+
+    logo.onload = async () => {
+        const logoWidth = 40; // Ancho del logo
+        const logoHeight = 20; // Alto del logo
+        const logoX = 10; // Posición X
+        const logoY = 10; // Posición Y
+
+      
+        doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+
+        const canvas = await html2canvas(document.querySelector('.table-responsive'));
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; 
+        const pageHeight = 295; 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 30; 
+
+     
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+       
+        doc.save('clases.pdf');
+    };
+});
+
+
+function exportToExcel() {
+    let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "clases" });
+    XLSX.writeFile(wb, 'clases.xlsx');
+}
+                    </script>
+
+<style>
+    
+</style>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+                     
+</body>
+
+</html>

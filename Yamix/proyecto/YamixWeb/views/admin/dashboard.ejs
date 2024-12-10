@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+ 
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Corona Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="vendors/jvectormap/jquery-jvectormap.css">
+    <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="vendors/owl-carousel-2/owl.carousel.min.css">
+    <link rel="stylesheet" href="vendors/owl-carousel-2/owl.theme.default.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="images/favicon.png" />
+
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include('partials/sidebar') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        <%- include('partials/topbar') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <!-- Primer gráfico -->
+              <div class="col-md-6 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Estudiantes registrados</h5>
+                    <div class="chart-container chart-container-usuarios">
+                      <canvas id="usuariosChart"></canvas>
+                    </div>
+                    <button class="btn btn-primary btn-ampliar" data-bs-toggle="modal" data-bs-target="#modalGraficas" data-chart="usuariosChart">
+                      Ampliar Gráfica
+                    </button>
+                  </div>
+                </div>
+              </div>
+            
+              <!-- Segundo gráfico con filtro -->
+              <div class="col-md-6 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Asistencias de Estudiantes</h5>
+            
+                    <!-- Filtro de rango de fechas al lado del gráfico -->
+                    <div class="d-flex justify-content-between align-items-center">
+                      <label for="filtroMes" class="mb-0">Filtrar por mes:</label>
+                      <select id="filtroMes" class="form-control w-auto">
+                        <option value="">Selecciona un mes</option>
+                        <option value="01">Enero</option>
+                        <option value="02">Febrero</option>
+                        <option value="03">Marzo</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Mayo</option>
+                        <option value="06">Junio</option>
+                        <option value="07">Julio</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                      </select>
+                    </div>
+            
+                    <!-- Contenedor del gráfico -->
+                    <div class="chart-container chart-container-asistencias">
+                      <canvas id="asistenciasChart"></canvas>
+                    </div>
+            
+                    <button class="btn btn-primary btn-ampliar" data-bs-toggle="modal" data-bs-target="#modalGraficas" data-chart="asistenciasChart">
+                      Ampliar Gráfica
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <!-- Tercer gráfico -->
+              <div class="col-md-6 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Estado de Usuarios</h5>
+                    <div class="chart-container chart-container-estado">
+                      <canvas id="estadoUsuariosChart"></canvas>
+                    </div>
+                    <button class="btn btn-primary btn-ampliar" data-bs-toggle="modal" data-bs-target="#modalGraficas" data-chart="estadoUsuariosChart">
+                      Ampliar Gráfica
+                    </button>
+                  </div>
+                </div>
+              </div>
+            
+              <!-- Cuarto gráfico -->
+              <div class="col-md-6 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Estudiantes Menores de Edad</h5>
+                    <div class="chart-container chart-container-menores">
+                      <canvas id="menoresEdadChart"></canvas>
+                    </div>
+                    <button class="btn btn-primary btn-ampliar" data-bs-toggle="modal" data-bs-target="#modalGraficas" data-chart="menoresEdadChart">
+                      Ampliar Gráfica
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade modal-expand" id="modalGraficas" tabindex="-1" aria-labelledby="modalGraficasLabel" aria-hidden="true">
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalGraficasLabel">Ampliar Gráfica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="chart-container-modal">
+                      <canvas id="modalChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+<style>
+.card {
+  height: 400px; 
+  display: flex;
+  flex-direction: column;
+  font-size: 16px; 
+}
+
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  font-size: 16px; 
+}
+
+
+.chart-container {
+  flex: 1; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+
+canvas {
+  max-height: 250px; 
+  max-width: 100%; 
+}
+
+
+.btn-ampliar {
+  width: 40%;
+  font-size: 18px; 
+}
+
+
+@media (min-width: 768px) {
+  .col-md-6 {
+    padding: 15px;
+  }
+}
+
+
+.modal-dialog {
+  max-width: 90%; 
+}
+
+.modal-content {
+  height: 95vh; 
+}
+
+.chart-container-modal {
+  height: 80vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+canvas {
+  max-width: 100%;  
+  max-height: 85vh; 
+  width: 100%;  
+}
+
+
+.modal-body {
+  font-size: 18px;
+}
+
+</style>
+            
+            
+<script>
+  const usuariosEndpoint = 'http://35.199.176.100/api/traer_usuarios';
+  const asistenciasEndpoint = 'http://35.199.176.100/api/traer_asistencia';
+  const clasesUsuariosEndpoint = 'http://35.199.176.100/api/traer_clasesU';
+  const modalGraficas = document.getElementById("modalGraficas");
+  const modalChartCanvas = document.getElementById("modalChart");
+  let modalChart;
+
+  // Escuchar cuando el modal se haya mostrado completamente
+  modalGraficas.addEventListener("shown.bs.modal", () => {
+  const chartId = modalChartCanvas.dataset.chartId;
+
+  if (chartId) {
+    let originalChartInstance;
+
+    // Accede a la instancia del gráfico usando las variables globales
+    if (chartId === 'usuariosChart') {
+      originalChartInstance = usuariosChart;
+    } else if (chartId === 'estadoUsuariosChart') {
+      originalChartInstance = estadoUsuariosChart;
+    } else if (chartId === 'menoresEdadChart') {
+      originalChartInstance = menoresEdadChart;
+    } else if (chartId === 'asistenciasChart') {
+      originalChartInstance = asistenciasChart;
+    }
+
+    if (!originalChartInstance) {
+      console.error("El gráfico original no se encontró:", chartId);
+      return;
+    }
+
+    // Destruir el gráfico del modal si existe
+    if (modalChart) {
+      modalChart.destroy();
+    }
+
+    // Crear una copia del gráfico original solo con los datos y opciones
+    modalChart = new Chart(modalChartCanvas.getContext("2d"), {
+      type: originalChartInstance.config.type,
+      data: originalChartInstance.data, // Usar los datos del gráfico original
+      options: originalChartInstance.options, // Usar las opciones del gráfico original
+    });
+  } else {
+    console.error("El atributo data-chartId no está definido en el canvas del modal.");
+  }
+});
+
+
+
+  // Asignar el ID del gráfico al modal cuando se haga clic en el botón
+  document.querySelectorAll(".btn-ampliar").forEach((btn) => {
+    btn.addEventListener("click", (event) => {
+      const chartId = event.currentTarget.getAttribute("data-chart");
+      modalChartCanvas.dataset.chartId = chartId; // Guardar el ID del gráfico en el canvas del modal
+    });
+  });
+
+  let usuariosChart, estadoUsuariosChart, menoresEdadChart, asistenciasChart;
+
+async function cargarUsuarios() {
+    try {
+        const responseUsuarios = await fetch(usuariosEndpoint);
+        if (!responseUsuarios.ok) {
+            throw new Error('Error en la carga de datos de usuarios');
+        }
+        const usuarios = await responseUsuarios.json();
+
+        const conteoRoles = {};
+        const estadoCount = { habilitado: 0, deshabilitado: 0, espera: 0 };
+        let menoresCount = 0;
+        const fechaActual = new Date();
+
+        usuarios.forEach(usuario => {
+            const rol = usuario.nombre_clase;
+            conteoRoles[rol] = (conteoRoles[rol] || 0) + 1;
+
+            if (usuario.estado === "habilitado") {
+                estadoCount.habilitado++;
+            } else if (usuario.estado === "deshabilitado") {
+                estadoCount.deshabilitado++;
+            } else if (usuario.estado === "espera") {
+                estadoCount.espera++;
+            }
+
+            const fechaNacimiento = new Date(usuario.fecha_nacimiento);
+            const edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+            const mesDiff = fechaActual.getMonth() - fechaNacimiento.getMonth();
+
+            if (
+                edad < 18 ||
+                (edad === 18 &&
+                    (mesDiff < 0 ||
+                        (mesDiff === 0 && fechaActual.getDate() < fechaNacimiento.getDate())))) {
+                menoresCount++;
+            }
+        });
+
+        const labelsUsuarios = Object.keys(conteoRoles);
+        const valuesUsuarios = Object.values(conteoRoles);
+
+        const responseClases = await fetch(clasesUsuariosEndpoint);
+        if (!responseClases.ok) {
+            throw new Error('Error en la carga de datos de clases');
+        }
+        const clases = await responseClases.json();
+
+        const labelsClases = clases.map(clase => clase.nombre_curso);
+        const valuesClases = clases.map(clase => clase.cantidad_estudiantes);
+
+        if (usuariosChart) usuariosChart.destroy();
+        if (estadoUsuariosChart) estadoUsuariosChart.destroy();
+        if (menoresEdadChart) menoresEdadChart.destroy();
+
+        usuariosChart = crearGraficoClases(labelsClases, valuesClases);
+        estadoUsuariosChart = crearGraficoEstadoUsuarios(estadoCount);
+        menoresEdadChart = crearGraficoMenoresEdad(menoresCount, usuarios.length);
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+ // Obtener el elemento del filtro
+const filtroMes = document.getElementById('filtroMes');
+
+// Escuchar el cambio en el filtro
+filtroMes.addEventListener('change', () => {
+  cargarAsistencias(); // Recargar los datos de asistencias con el filtro aplicado
+});
+
+async function cargarAsistencias() {
+  try {
+    const response = await fetch(asistenciasEndpoint);
+    if (!response.ok) {
+      throw new Error('Error en la carga de datos de asistencias');
+    }
+    const asistencias = await response.json();
+
+    const presentes = [];
+    const ausentes = [];
+    const fechas = [];
+
+    const mesSeleccionado = filtroMes.value; // Obtener el mes seleccionado
+
+    asistencias.forEach(asistencia => {
+      const fechaAsistencia = new Date(asistencia.fecha_asistencia);
+      const mesAsistencia = (fechaAsistencia.getMonth() + 1).toString().padStart(2, '0'); // Obtener el mes (01-12)
+
+      // Filtrar por mes seleccionado
+      if (!mesSeleccionado || mesAsistencia === mesSeleccionado) {
+        let presenteCount = 0;
+        let ausenteCount = 0;
+
+        asistencia.estudiantes.forEach(estudiante => {
+          if (estudiante.presente === "sí") {
+            presenteCount++;
+          } else {
+            ausenteCount++;
+          }
+        });
+
+        presentes.push(presenteCount);
+        ausentes.push(ausenteCount);
+        fechas.push(fechaAsistencia.toLocaleDateString());
+      }
+    });
+
+    if (asistenciasChart) asistenciasChart.destroy();
+
+    asistenciasChart = crearGraficoAsistencias(fechas, presentes, ausentes);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+
+  function crearGraficoAsistencias(fechas, presentes, ausentes) {
+    const ctx = document.getElementById('asistenciasChart').getContext('2d');
+
+    const data = {
+      labels: fechas,
+      datasets: [
+        {
+          label: 'Presentes',
+          data: presentes,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        },
+        {
+          label: 'Ausentes',
+          data: ausentes,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        }
+      ]
+    };
+
+    return new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Asistencias de Estudiantes'
+          },
+          legend: {
+            position: 'top',
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  function crearGraficoEstadoUsuarios(estadoCount) {
+    const ctx = document.getElementById('estadoUsuariosChart').getContext('2d');
+
+    const data = {
+      labels: ['Habilitados', 'Deshabilitados', 'En Espera'],
+      datasets: [{
+        label: 'Estado de Usuarios',
+        data: [estadoCount.habilitado, estadoCount.deshabilitado, estadoCount.espera],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(255, 159, 64, 0.6)'
+        ],
+      }]
+    };
+
+    return new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Estado de Usuarios'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  function crearGraficoMenoresEdad(menoresCount, totalCount) {
+    const ctx = document.getElementById('menoresEdadChart').getContext('2d');
+
+    const data = {
+      labels: ['Menores de Edad', 'Mayores de Edad'],
+      datasets: [{
+        label: 'Distribución de Usuarios por Edad',
+        data: [menoresCount, totalCount - menoresCount],
+        backgroundColor: [
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(54, 162, 235, 0.6)'
+        ],
+      }]
+    };
+
+    return new Chart(ctx, {
+      type: 'doughnut',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Distribución de Usuarios Menores y Mayores de Edad'
+          }
+        }
+      }
+    });
+  }
+
+  function crearGraficoClases(labels, values) {
+    const ctx = document.getElementById('usuariosChart').getContext('2d');
+
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: 'Usuarios por Curso',
+        data: values,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(153, 102, 255, 0.6)'
+        ],
+      }]
+    };
+
+    return new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Usuarios por Curso'
+          },
+          legend: {
+            position: 'top',
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  // Cargar todos los gráficos
+  cargarUsuarios();
+  cargarAsistencias();
+</script>
+
+
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="vendors/chart.js/Chart.min.js"></script>
+    <%- include('partials/scripts') %>
+  </body>
+</html>

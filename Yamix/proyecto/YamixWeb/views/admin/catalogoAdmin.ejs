@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+
+    <%- include('partials/head') %>
+        <style>
+            .icon-btn {
+                background-color: transparent;
+                border: none;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+
+            .icon-btn:hover {
+                color: #ddd;
+            }
+            
+            .modal-header .close {
+                color: white; /* Color del botón de cerrar */
+            }
+            
+            .modal-body img {
+                max-width: 100%; /* Ajustar el tamaño de la imagen al contenedor */
+                height: auto; /* Mantener la proporción de la imagen */
+            }            
+        </style>
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <%- include('partials/sidebar') %>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_navbar.html -->
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <%- include('partials/topbar') %>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="card-title">Catálogo</h3>
+                                    <div>
+                                        <button id="exportPdf" class="btn btn-outline-secondary btn-fw">
+                                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-fw" onclick="exportToExcel()">
+                                            <i class="fas fa-file-excel"></i> Exportar a Excel
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-fw" data-toggle="modal"
+                                            data-target="#addModal">
+                                            <i class="fas fa-plus"></i> Agregar
+                                        </button>
+
+                                    </div>
+                                </div>
+                                </p>
+                                <div class="table-responsive">
+                                    <% if (catalogo.length> 0) { %>
+                                        <table id="miTabla" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Producto</th>
+                                                    <th>Descripción</th>
+                                                    <th>Imagen</th>
+                                                    <th>Curso</th>
+                                                    <th>Link</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% catalogo.forEach((item, index)=> { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= index + 1 %>
+                                                        </td>
+                                                        <td>
+                                                            <%= item.nombre_producto %>
+                                                        </td>
+                                                        <td>
+                                                            <%= item.descripcion %>
+                                                        </td>
+
+                                                        <td>
+                                                            <!-- Ícono de imagen -->
+                                                            <button type="button" class="button-iconn"
+                                                                data-toggle="modal"
+                                                                data-target="#imageModal-<%= item.id_catalogo %>">
+                                                                <i class="fas fa-image fa-2x"></i>
+                                                                <!-- Ícono de imagen -->
+                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <%= item.nombre_curso %>
+                                                        </td>
+                                                        <td>
+                                                            <%= item.link %>
+
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="button-iconn"
+                                                                data-toggle="modal" data-target="#editModal"
+                                                                data-id="<%= item.id_catalogo %>"
+                                                                data-nombre="<%= item.nombre_producto %>"
+                                                                data-descripcion="<%= item.descripcion %>"
+                                                                data-link="<%= item.link %>"
+                                                                data-id_curso="<%= item.id_curso %>">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button type="button" class="button-iconn"
+                                                                onclick="confirmarEliminacion(`<%= item.id_catalogo %>`)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Modal para mostrar la imagen -->
+                                                    <div class="modal fade" id="imageModal-<%= item.id_catalogo %>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel-<%= item.id_catalogo %>" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-sm" role="document"> <!-- Clase modal-sm para un tamaño más pequeño -->
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="imageModalLabel-<%= item.id_catalogo %>">
+                                                                        <%= item.nombre_producto %>
+                                                                    </h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true" style="color: white;">&times;</span> <!-- Cambiar color a blanco -->
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-center">
+                                                                    <!-- Imagen en tamaño completo -->
+                                                                    <img src="<%= item.imagen_producto %>" alt="<%= item.nombre_producto %>" class="img-fluid">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <% }); %>
+                                            </tbody>
+                                        </table>
+                                        <% } else { %>
+                                            <p>No hay productos en el catálogo.</p>
+                                            <% } %>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <!-- Modal editar -->
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Editar Producto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Vista: Editar Producto -->
+                                <form id="editProductForm" action="/actualizarProducto" method="POST"
+                                    enctype="multipart/form-data">
+                                    <input type="hidden" id="productoId" name="id_catalogo">
+                                    <div class="form-group row">
+                                        <label for="nombre_producto" class="col-sm-3 col-form-label">Nombre
+                                            Producto</label>
+                                        <div class="col-sm-9">
+                                            <input id="nombre" type="text" name="nombre_producto" class="form-control"
+                                                placeholder="Nombre">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="descripcion" class="col-sm-3 col-form-label">Descripción</label>
+                                        <div class="col-sm-9">
+                                            <input id="descripcion" type="text" name="descripcion" class="form-control"
+                                                placeholder="Descripción">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="link" class="col-sm-3 col-form-label">Link</label>
+                                        <div class="col-sm-9">
+                                            <input id="link" type="text" name="link" class="form-control"
+                                                placeholder="link">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="imagen_producto" class="col-sm-3 col-form-label">Imagen
+                                            Producto</label>
+                                        <div class="col-sm-9">
+                                            <input type="file" name="imagen_producto" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="id_clase" class="col-sm-3 col-form-label">Curso</label>
+                                        <div class="col-sm-9">
+                                            <select name="id_curso" class="form-control" id="id_curso" required>
+                                                <option value="" disabled selected>Seleccione un curso</option>
+                                                <% cursos.forEach(curso=> { %>
+                                                    <option value="<%= curso.id_curso %>">
+                                                        <%= curso.nombre_curso %>
+                                                    </option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                            </div class="modal-footer">
+                            <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-dark">Guardar Cambios</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal agregar -->
+            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addModalLabel">Agregar Producto</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addProductForm" class="forms-sample" action="/add" method="post"
+                                enctype="multipart/form-data">
+                                <div class="form-group row">
+                                    <label for="nombre_producto" class="col-sm-3 col-form-label">Nombre del
+                                        Producto</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="nombre_producto" class="form-control"
+                                            id="nombreProducto" placeholder="Nombre del Producto" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="descripcion" class="col-sm-3 col-form-label">Descripción</label>
+                                    <div class="col-sm-9">
+                                        <textarea name="descripcion" class="form-control" id="descripcion" rows="3"
+                                            placeholder="Descripción" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="imagenProducto" class="col-sm-3 col-form-label">Imagen del
+                                        Producto</label>
+                                    <div class="col-sm-9">
+                                        <input type="file" name="imagen_producto" class="form-control-file"
+                                            id="imagenProducto" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="id_clase" class="col-sm-3 col-form-label">Clase</label>
+                                    <div class="col-sm-9">
+                                        <select name="id_curso" class="form-control" id="id_curso" required>
+                                            <option value="" disabled selected>Seleccione un curso</option>
+                                            <% cursos.forEach(curso=> { %>
+                                                <option value="<%= curso.id_curso %>">
+                                                    <%= curso.nombre_curso %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Nuevo campo para el enlace -->
+                                <div class="form-group row">
+                                    <label for="link" class="col-sm-3 col-form-label">Link</label>
+                                    <div class="col-sm-9">
+                                        <input type="url" name="link" class="form-control" id="link"
+                                            placeholder="link del producto" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-dark mr-2"
+                                        data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-dark">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- main-panel ends -->
+        </div>
+    </div>
+    </div>
+    <%- include('partials/scripts') %>
+        <!-- Custom JS -->
+
+        <script>
+            document.getElementById('imagenProducto').addEventListener('change', function () {
+                const fileInput = this;
+                const file = fileInput.files[0];
+                const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        
+                if (!file) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Archivo no seleccionado',
+                        text: 'Por favor selecciona un archivo de imagen.',
+                    });
+                    fileInput.value = ''; // Limpia el input
+                    return;
+                }
+        
+                if (!validImageTypes.includes(file.type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Formato no válido',
+                        text: 'Por favor selecciona un archivo de imagen válido (JPEG, PNG, GIF, WEBP).',
+                    });
+                    fileInput.value = ''; // Limpia el input
+                }
+            });
+        
+            document.getElementById('addProductForm').addEventListener('submit', function (event) {
+                const fileInput = document.getElementById('imagenProducto');
+                const file = fileInput.files[0];
+                const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        
+                if (!file || !validImageTypes.includes(file.type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Formulario incompleto',
+                        text: 'Selecciona un archivo de imagen válido antes de enviar el formulario.',
+                    });
+                    event.preventDefault(); // Evita que el formulario se envíe
+                }
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#editModal').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget); // Botón que activó el modal
+                    var id_catalogo = button.data('id');
+                    var nombre_producto = button.data('nombre')
+                    var descripcion = button.data('descripcion')
+                    var id_curso = button.data('id_curso');
+                    var link = button.data('link');
+                    // Extraer el id_catalogo del data-* attribute
+                    var modal = $(this);
+
+                    modal.find('.modal-body #productoId').val(id_catalogo);
+                    modal.find('.modal-body #nombre').val(nombre_producto);
+                    modal.find('.modal-body #descripcion').val(descripcion);
+                    modal.find('.modal-body #link').val(link);
+                    modal.find('.modal-body #id_curso').val(id_curso);
+                });
+
+            });
+
+        </script>
+
+        <script>
+          document.getElementById('exportPdf').addEventListener('click', () => {
+    // Asegúrate de que jsPDF esté disponible desde window.jspdf
+    const { jsPDF } = window.jspdf;
+
+    // Verifica si jsPDF está correctamente cargado
+    if (!jsPDF) {
+        console.error('jsPDF no está disponible');
+        return;
+    }
+
+    const tableElement = document.querySelector('.table-responsive');
+
+    // Ajustar estilos temporalmente
+    tableElement.style.overflow = 'visible';
+    tableElement.style.height = 'auto';
+
+    html2canvas(tableElement, {
+        scale: 2, // Aumentar la resolución de la imagen
+        useCORS: true // Manejar imágenes externas si es necesario
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png'); // Usar PNG para mayor calidad
+        const imgWidth = 210; // Ancho de la página en mm
+        const pageHeight = 295; // Altura de la página en mm
+        const imgHeight = canvas.height * imgWidth / canvas.width; // Altura de la imagen en mm
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        const doc = new jsPDF(); // Crear el documento PDF
+
+        // Añadir la imagen al documento
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        // Añadir más páginas si es necesario
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        // Guardar el documento como archivo PDF
+        doc.save('catalogo.pdf');
+
+        // Restaurar los estilos después de capturar
+        tableElement.style.overflow = '';
+        tableElement.style.height = '';
+    }).catch(error => {
+        console.error('Error capturando la tabla:', error);
+    });
+});
+
+
+
+        </script>
+        <script>
+            function exportToExcel() {
+                // Obtén el elemento de la tabla
+                let table = document.getElementById('miTabla');
+
+                // Usa la biblioteca XLSX para convertir la tabla a un libro de Excel
+                let wb = XLSX.utils.table_to_book(table, { sheet: "catalogo" });
+
+                // Guarda el archivo Excel con el nombre 'administradores.xlsx'
+                XLSX.writeFile(wb, 'catalogo.xlsx');
+            }
+        </script>
+
+        <script>
+            function confirmarEliminacion(id) {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminarlo'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/eliminarProducto/' + id, {
+                            method: 'DELETE'
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    Swal.fire(
+                                        'Eliminado!',
+                                        'El producto ha sido eliminado.',
+                                        'success'
+                                    ).then(() => {
+                                        window.location.reload(); // Recargar la página o redirigir a otra vista
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'No se pudo eliminar el producto.',
+                                        'error'
+                                    );
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire(
+                                    'Error!',
+                                    'Hubo un problema con la solicitud.',
+                                    'error'
+                                );
+                            });
+                    }
+                });
+            }
+            
+        </script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</body>
+
+</html>

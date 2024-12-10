@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Asistencia</title>
+
+ <!-- Favicon -->
+ <link href="c/img/favicon.ico" rel="icon">
+
+ <!-- Font Awesome -->
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+ <!-- Flaticon Font -->
+ <link rel="stylesheet" href="c/lib/flaticon/font/flaticon.css">
+
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- Customized Bootstrap Stylesheet -->
+ <link href="c/css/style.min.css" rel="stylesheet">
+     <!-- Calendario scripts -->
+
+
+</head>
+
+</div>
+<body class="bg-white">
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+      <%- include('partials/topbar') %>
+  </div>
+<!-- Navbar End -->
+
+ 
+  <!-- Page Header Start -->
+  <div class="container-fluid page-header mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+        <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Historial de asistencia</h4>
+        <h6 class="display-7 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold"><%= data.usuario %></h6>
+        <div class="d-inline-flex">
+            <p class="m-0 text-white"><a class="text-white" href="">Inicio</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">YAMIX</p>
+        </div>
+    </div>
+</div>
+  <!-- Page Header End -->
+
+
+  <div class="filters-container mb-4 text-center">
+    <!-- Filtro de asistencia -->
+    <div class="filter-item" style="margin-right: 20px;">
+      <select id="filtroAsistencia" class="form-control" style="max-width: 400px;">
+        <option value="">Filtro asistencia</option>
+        <!-- Opciones dinámicas se agregarán aquí -->
+      </select>
+    </div>
+  
+    <!-- Filtro por mes -->
+    <div class="filter-item">
+      <label for="monthFilter">Filtrar por mes:</label>
+      <select id="monthFilter">
+        <option value="">Todos</option>
+        <option value="Enero">Enero</option>
+        <option value="Febrero">Febrero</option>
+        <option value="Marzo">Marzo</option>
+        <option value="Abril">Abril</option>
+        <option value="Mayo">Mayo</option>
+        <option value="Junio">Junio</option>
+        <option value="Julio">Julio</option>
+        <option value="Agosto">Agosto</option>
+        <option value="Septiembre">Septiembre</option>
+        <option value="Octubre">Octubre</option>
+        <option value="Noviembre">Noviembre</option>
+        <option value="Diciembre">Diciembre</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid" id="asistenciasGrid">
+    <% if (data && data.asistencias && data.asistencias.length > 0) { %>
+        <% data.asistencias.forEach(function(asistencia) { %>
+            <div class="card">
+                <span class="icon">
+                    <!-- Icono de la tarjeta -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.5 9.5V5.5C4.5 4.94772 4.94772 4.5 5.5 4.5H9.5C10.0523 4.5 10.5 4.94772 10.5 5.5V9.5C10.5 10.0523 10.0523 10.5 9.5 10.5H5.5C4.94772 10.5 4.5 10.0523 4.5 9.5Z"></path>
+                        <path d="M13.5 18.5V14.5C13.5 13.9477 13.9477 13.5 14.5 13.5H18.5C19.0523 13.5 19.5 13.9477 19.5 14.5V18.5C19.5 19.0523 19.0523 19.5 18.5 19.5H14.5C13.9477 19.5 13.5 19.0523 13.5 18.5Z"></path>
+                        <path d="M4.5 19.5L7.5 13.5L10.5 19.5H4.5Z"></path>
+                        <path d="M16.5 4.5C18.1569 4.5 19.5 5.84315 19.5 7.5C19.5 9.15685 18.1569 10.5 16.5 10.5C14.8431 10.5 13.5 9.15685 13.5 7.5C13.5 5.84315 14.8431 4.5 16.5 4.5Z"></path>
+                    </svg>
+                </span>
+                <h4><%= asistencia.nombre_curso %></h4>
+                <p>
+                    <br><strong>Fecha asistencia: </strong><%= asistencia.fecha_asistencia %>
+                    <br><strong>Hora de inicio: </strong><%= asistencia.hora_inicio %>
+                    <br><strong>Hora final: </strong><%= asistencia.hora_final %>
+                    <br><strong>Instructor: </strong><%= asistencia.profesor %>
+                    <br><strong>asistencia: </strong><%= asistencia.presente %>
+                </p>
+
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>No se encontraron asistencias.</p>
+    <% } %>
+</div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+  console.log('Script de paginación inicializado');
+  const itemsPerPage = 10; // Número de elementos por página
+  const grid = document.getElementById('asistenciasGrid');
+  const cards = Array.from(grid.getElementsByClassName('card'));
+  const prevPageBtn = document.getElementById('prevPage');
+  const nextPageBtn = document.getElementById('nextPage');
+  const pageNumberDisplay = document.getElementById('pageNumber');
+  let currentPage = 1;
+  const totalPages = Math.ceil(cards.length / itemsPerPage);
+
+  function updatePage() {
+    console.log(`Actualizando página: ${currentPage}`);
+    cards.forEach((card, index) => {
+      if (index >= (currentPage - 1) * itemsPerPage && index < currentPage * itemsPerPage) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    pageNumberDisplay.textContent = `Página ${currentPage}`;
+    prevPageBtn.disabled = currentPage === 1;
+    nextPageBtn.disabled = currentPage === totalPages;
+  }
+
+  prevPageBtn.addEventListener('click', function () {
+    if (currentPage > 1) {
+      currentPage--;
+      console.log('Página anterior seleccionada');
+      updatePage();
+    }
+  });
+
+  nextPageBtn.addEventListener('click', function () {
+    if (currentPage < totalPages) {
+      currentPage++;
+      console.log('Página siguiente seleccionada');
+      updatePage();
+    }
+  });
+
+  updatePage();
+});
+
+// Filtro por mes
+document.addEventListener("DOMContentLoaded", () => {
+ 
+  const monthFilter = document.getElementById("monthFilter");
+  const resetFilter = document.getElementById("resetFilter");
+  const cards = document.querySelectorAll(".card");
+
+  monthFilter.addEventListener("change", () => {
+  const selectedMonth = monthFilter.value;
+ 
+
+  cards.forEach(card => {
+    // Obtener solo el bloque de texto relevante de la tarjeta
+    const dateTextMatch = card.innerText.match(/Fecha asistencia:\s+(.+)/);
+    if (dateTextMatch) {
+      const dateText = dateTextMatch[1].trim(); // Limpiar espacios innecesarios
+   
+
+      // Buscar el mes dentro del bloque de texto extraído
+      const monthMatch = dateText.match(/de\s+(\w+)\s+de/);
+      if (monthMatch) {
+        const cardMonth = monthMatch[1].toLowerCase(); // Convertir a minúsculas para comparar
+      
+        if (selectedMonth === "" || cardMonth === selectedMonth.toLowerCase()) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      } else {
+      
+        card.style.display = "none"; // Ocultar tarjeta si no hay mes válido
+      }
+    } else {
+     
+      card.style.display = "none"; // Ocultar tarjeta si no hay fecha
+    }
+  });
+});
+
+
+
+  resetFilter.addEventListener("click", () => {
+    console.log('Filtro de mes reiniciado');
+    monthFilter.value = "";
+    cards.forEach(card => card.style.display = "block");
+  });
+});
+
+// Filtro de asistencia
+document.addEventListener("DOMContentLoaded", () => {
+  console.log('Script de filtro de asistencia inicializado');
+  const filtroAsistencia = document.getElementById('filtroAsistencia');
+  const cards = document.querySelectorAll('.card');
+
+  const cursos = Array.from(new Set(Array.from(cards).map(card => card.querySelector('h4').textContent.trim())));
+  console.log('Cursos únicos encontrados:', cursos);
+
+  cursos.forEach(curso => {
+    const option = document.createElement('option');
+    option.value = curso.toLowerCase();
+    option.textContent = curso;
+    filtroAsistencia.appendChild(option);
+  });
+
+  filtroAsistencia.addEventListener('change', function () {
+    const filterValue = this.value.toLowerCase();
+    console.log(`Filtro de asistencia seleccionado: ${filterValue}`);
+
+    cards.forEach(card => {
+      const nombreCurso = card.querySelector('h4').textContent.toLowerCase();
+      console.log(`Nombre del curso en tarjeta: ${nombreCurso}`);
+
+      if (filterValue === '' || nombreCurso.includes(filterValue)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+  </script>
+  <style>
+    .filters-container {
+      display: flex;
+      justify-content: center; 
+      align-items: center; /
+    }
+    .filter-item {
+      margin-right: 20px; 
+    }
+    .filter-item:last-child {
+      margin-right: 0;
+    }
+  </style>
+  
+
+
+
+  <div id="pagination" class="text-center mt-4">
+    <button id="prevPage" class="btn btn-outline-primary">Anterior</button>
+    <span id="pageNumber" class="mx-3"></span>
+    <button id="nextPage" class="btn btn-outline-primary">Siguiente</button>
+  </div>
+
+
+
+
+
+
+
+
+
+
+  
+ 
+<style>
+ .card:active {
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.6);  
+  transform: scale(0.98);  
+  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;  
+}
+
+
+  #pagination button {
+  margin: 0 10px;
+}
+#pagination span {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+  .card .card-buttons {
+  position: relative;
+  z-index: 2; /* Asegura que los botones estén sobre la tarjeta */
+}
+
+  body {
+      --background-color: #18181B;
+      --text-color: #ffffff;
+      --card-background-color: rgba(255, 255, 255, .015);
+      --card-border-color: rgba(255, 255, 255, 0.1);
+      --card-box-shadow-1: rgba(0, 0, 0, 0.05);
+      --card-box-shadow-1-y: 3px;
+      --card-box-shadow-1-blur: 6px;
+      --card-box-shadow-2: rgba(0, 0, 0, 0.1);
+      --card-box-shadow-2-y: 8px;
+      --card-box-shadow-2-blur: 15px;
+      --card-label-color: #FFFFFF;
+      --card-icon-color: #D4D4D8;
+      --card-icon-background-color: rgba(255, 255, 255, 0.08);
+      --card-icon-border-color: rgba(255, 255, 255, 0.12);
+      --card-shine-opacity: .1;
+      --card-shine-gradient: conic-gradient(from 205deg at 50% 50%, rgba(16, 185, 129, 0) 0deg, #ff0000 25deg, rgba(52, 211, 153, 0.18) 295deg, rgba(16, 185, 129, 0) 360deg);
+      --card-line-color: #2A2B2C;
+      --card-tile-color: rgba(16, 185, 129, 0.05);
+      --card-hover-border-color: rgba(255, 255, 255, 0.2);
+      --card-hover-box-shadow-1: rgba(0, 0, 0, 0.04);
+      --card-hover-box-shadow-1-y: 5px;
+      --card-hover-box-shadow-1-blur: 10px;
+      --card-hover-box-shadow-2: rgba(0, 0, 0, 0.3);
+      --card-hover-box-shadow-2-y: 15px;
+      --card-hover-box-shadow-2-blur: 25px;
+      --card-hover-icon-color: #ff0000;
+      --card-hover-icon-background-color: rgb(255 0 0 / 10%);
+      --card-hover-icon-border-color: rgba(52, 211, 153, 0.2);
+      --blur-opacity: .01;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 tarjetas por fila */
+    grid-gap: 32px; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+  }
+  
+  
+  .card {
+    background-color: var(--background-color);
+    box-shadow: 0px var(--card-box-shadow-1-y) var(--card-box-shadow-1-blur) var(--card-box-shadow-1), 0px var(--card-box-shadow-2-y) var(--card-box-shadow-2-blur) var(--card-box-shadow-2), 0 0 0 1px var(--card-border-color);
+    padding: 56px 16px 16px 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow .25s;
+  
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 15px;
+      background-color: var(--card-background-color);
+    }
+  
+    .icon {
+      z-index: 2;
+      position: relative;
+      display: table;
+      padding: 8px;
+  
+              &::after {
+              content: '';
+              position: absolute;
+              inset: 4.5px;
+              border-radius: 50%;
+              background-color: rgb(255 0 0 / 8%);
+              border: 1px solid rgb(255 0 0 / 12%);
+              backdrop-filter: blur(2px);
+              transition: background-color .25s, border-color .25s;
+          }
+  
+      svg {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 24px;
+        height: 24px;
+        transform: translateZ(0);
+        color: var(--card-icon-color);
+        transition: color .25s;
+      }
+    }
+  
+    h4 {
+      z-index: 2;
+      position: relative;
+      margin: 12px 0 4px 0;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 2;
+      color: var(--card-label-color);
+    }
+  
+    p {
+      z-index: 2;
+      position: relative;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-color);
+    }
+  
+    .shine {
+      border-radius: inherit;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity .5s;
+  
+      &:before {
+        content: '';
+        width: 150%;
+        padding-bottom: 150%;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        bottom: 55%;
+        filter: blur(35px);
+        opacity: var(--card-shine-opacity);
+        transform: translateX(-50%);
+        background-image: var(--card-shine-gradient);
+      }
+    }
+  
+    .background {
+      border-radius: inherit;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      -webkit-mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+      mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+  
+      .tiles {
+        opacity: 0;
+        transition: opacity .25s;
+  
+        .tile {
+          position: absolute;
+          background-color: var(--card-tile-color);
+          animation-duration: 8s;
+          animation-iteration-count: infinite;
+          opacity: 0;
+  
+          &.tile-4,
+          &.tile-6,
+          &.tile-10 {
+            animation-delay: -2s;
+          }
+  
+          &.tile-3,
+          &.tile-5,
+          &.tile-8 {
+            animation-delay: -4s;
+          }
+  
+          &.tile-2,
+          &.tile-9 {
+            animation-delay: -6s;
+          }
+  
+          &.tile-1 {
+            top: 0;
+            left: 0;
+            height: 10%;
+            width: 22.5%;
+          }
+  
+          &.tile-2 {
+            top: 0;
+            left: 22.5%;
+            height: 10%;
+            width: 27.5%;
+          }
+  
+          &.tile-3 {
+            top: 0;
+            left: 50%;
+            height: 10%;
+            width: 27.5%;
+          }
+  
+          &.tile-4 {
+            top: 0;
+            left: 77.5%;
+            height: 10%;
+            width: 22.5%;
+          }
+  
+          &.tile-5 {
+            top: 10%;
+            left: 0;
+            height: 22.5%;
+            width: 22.5%;
+          }
+  
+          &.tile-6 {
+            top: 10%;
+            left: 22.5%;
+            height: 22.5%;
+            width: 27.5%;
+          }
+  
+          &.tile-7 {
+            top: 10%;
+            left: 50%;
+            height: 22.5%;
+            width: 27.5%;
+          }
+  
+          &.tile-8 {
+            top: 10%;
+            left: 77.5%;
+            height: 22.5%;
+            width: 22.5%;
+          }
+  
+          &.tile-9 {
+            top: 32.5%;
+            left: 50%;
+            height: 22.5%;
+            width: 27.5%;
+          }
+  
+          &.tile-10 {
+            top: 32.5%;
+            left: 77.5%;
+            height: 22.5%;
+            width: 22.5%;
+          }
+        }
+      }
+  
+      @keyframes tile {
+  
+        0%,
+        12.5%,
+        100% {
+          opacity: 1;
+        }
+  
+        25%,
+        82.5% {
+          opacity: 0;
+        }
+      }
+  
+      .line {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity .35s;
+  
+        &:before,
+        &:after {
+          content: '';
+          position: absolute;
+          background-color: var(--card-line-color);
+          transition: transform .35s;
+        }
+  
+        &:before {
+          left: 0;
+          right: 0;
+          height: 1px;
+          transform-origin: 0 50%;
+          transform: scaleX(0);
+        }
+  
+        &:after {
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          transform-origin: 50% 0;
+          transform: scaleY(0);
+        }
+  
+        &.line-1 {
+          &:before {
+            top: 10%;
+          }
+  
+          &:after {
+            left: 22.5%;
+          }
+  
+          &:before,
+          &:after {
+            transition-delay: .3s;
+          }
+        }
+  
+        &.line-2 {
+          &:before {
+            top: 32.5%;
+          }
+  
+          &:after {
+            left: 50%;
+          }
+  
+          &:before,
+          &:after {
+            transition-delay: .15s;
+          }
+        }
+  
+        &.line-3 {
+          &:before {
+            top: 55%;
+          }
+  
+          &:after {
+            right: 22.5%;
+          }
+        }
+      }
+    }
+  
+    &:hover {
+      box-shadow: 0px 3px 6px var(--card-hover-box-shadow-1), 0px var(--card-hover-box-shadow-2-y) var(--card-hover-box-shadow-2-blur) var(--card-hover-box-shadow-2), 0 0 0 1px var(--card-hover-border-color);
+  
+      .icon {
+        &::after {
+          background-color: var(--card-hover-icon-background-color);
+          border-color: var(--card-hover-icon-border-color);
+        }
+  
+        svg {
+          color: var(--card-hover-icon-color);
+        }
+      }
+  
+      .shine {
+        opacity: 1;
+        transition-duration: .5s;
+        transition-delay: 0s;
+      }
+  
+      .background {
+  
+        .tiles {
+          opacity: 1;
+          transition-delay: .25s;
+  
+          .tile {
+            animation-name: tile;
+          }
+        }
+  
+        .line {
+          opacity: 1;
+          transition-duration: .15s;
+  
+          &:before {
+            transform: scaleX(1);
+          }
+  
+          &:after {
+            transform: scaleY(1);
+          }
+  
+          &.line-1 {
+  
+            &:before,
+            &:after {
+              transition-delay: .0s;
+            }
+          }
+  
+          &.line-2 {
+  
+            &:before,
+            &:after {
+              transition-delay: .15s;
+            }
+          }
+  
+          &.line-3 {
+  
+            &:before,
+            &:after {
+              transition-delay: .3s;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .day-night {
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    opacity: .3;
+  
+    input {
+      display: none;
+  
+      &+div {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        position: relative;
+        box-shadow: inset 8px -8px 0 0 var(--text-color);
+        transform: scale(1) rotate(-2deg);
+        transition: box-shadow .5s ease 0s, transform .4s ease .1s;
+  
+        &:before {
+          content: '';
+          width: inherit;
+          height: inherit;
+          border-radius: inherit;
+          position: absolute;
+          left: 0;
+          top: 0;
+          transition: background-color .3s ease;
+        }
+  
+        &:after {
+          content: '';
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          margin: -3px 0 0 -3px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          box-shadow: 0 -23px 0 var(--text-color), 0 23px 0 var(--text-color), 23px 0 0 var(--text-color), -23px 0 0 var(--text-color), 15px 15px 0 var(--text-color), -15px 15px 0 var(--text-color), 15px -15px 0 var(--text-color), -15px -15px 0 var(--text-color);
+          transform: scale(0);
+          transition: all .3s ease;
+        }
+      }
+  
+      &:checked+div {
+        box-shadow: inset 20px -20px 0 0 var(--text-color);
+        transform: scale(.5) rotate(0deg);
+        transition: transform .3s ease .1s, box-shadow .2s ease 0s;
+  
+        &:before {
+          background: var(--text-color);
+          transition: background-color .3s ease .1s;
+        }
+  
+        &:after {
+          transform: scale(1);
+          transition: transform .5s ease .15s;
+        }
+      }
+    }
+  }
+  
+  html {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  * {
+    box-sizing: inherit;
+    &:before,
+    &:after {
+      box-sizing: inherit;
+    }
+  }
+  
+   Center
+  body {
+    min-height: 100vh;
+    display: flex;
+    font-family: 'Inter', Arial;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    overflow: hidden;
+  
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 0 -60% 65% -60%;
+      background-image: radial-gradient(ellipse at top, #ff0000 0%, var(--background-color) 50%);
+      opacity: var(--blur-opacity);
+    }
+  
+    .twitter {
+      position: fixed;
+      display: block;
+      right: 12px;
+      bottom: 12px;
+      svg {
+        width: 32px;
+        height: 32px;
+        fill: #fff;
+      }
+    }
+  }
+
+  /* Estilo básico para los checkboxes */
+.form-check-input {
+  border: 2px solid #dc3545; /* Color de borde rojo */
+  background-color: #ffffff; /* Fondo blanco */
+  height: 18px;
+  width: 18px;
+}
+
+/* Al marcar el checkbox */
+.form-check-input:checked {
+  background-color: #dc3545; /* Fondo rojo cuando está marcado */
+  border-color: #dc3545; /* Borde rojo cuando está marcado */
+}
+
+/* Estilo para cuando el checkbox tiene un hover */
+.form-check-input:hover {
+  background-color: #f5a5a5; /* Color claro cuando se pasa el mouse */
+  border-color: #f5a5a5; /* Borde claro cuando se pasa el mouse */
+}
+
+/* Estilo para el texto del label */
+.form-check-label {
+  font-size: 14px;
+  color: #333333; /* Texto oscuro para buen contraste */
+}
+
+</style>
+
+ 
+<!-- Footer Start -->
+<%- include('partials/footer') %>
+  <!-- Footer End -->
+       <!-- JavaScript Libraries -->
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+       <script src="c/lib/easing/easing.min.js"></script>
+       <script src="c/lib/waypoints/waypoints.min.js"></script>
+   
+       <!-- Contact Javascript File -->
+       <script src="c/mail/jqBootstrapValidation.min.js"></script>
+       <script src="c/mail/contact.js"></script>
+   
+       <!-- Template Javascript -->
+  

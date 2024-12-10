@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_sidebar.html -->
+        <%- include('partials/sidebar') %>
+            <!-- partial -->
+            <div class="container-fluid page-body-wrapper">
+                <!-- partial:../../partials/_navbar.html -->
+                <%- include('partials/topbar') %>
+                    <!-- partial -->
+                    <div class="main-panel">
+                        <div class="content-wrapper">
+                            <div class="col-lg-12 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h3 class="card-title">Cursos</h3>
+                                            <div>
+                                                <button id="exportPdf" class="btn btn-outline-secondary btn-fw">
+                                                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                                                </button>
+                                                <button class="btn btn-outline-secondary btn-fw" onclick="exportToExcel()">
+                                                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                                                </button>
+                                                <button class="btn btn-outline-secondary btn-fw" data-toggle="modal"
+                                                    data-target="#addModal">
+                                                    <i class="fas fa-plus"></i> Agregar
+                                                </button>
+        
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="miTabla" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                     
+                                                        <th>Nombre del Curso</th>
+                                                        <th>Descripción</th>
+                                                        <th>Imagen</th>
+                                                        <th>Estado</th>
+                                                        <th>Acción</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (Array.isArray(data) && data.length > 0) { %>
+                                                        <% data.forEach(curso => { %>
+                                                            <tr>
+                                                             
+                                                                <td><%= curso.nombre_curso %></td>
+                                                                <td><%= curso.descripcion %></td>
+                                                                <td>
+                                                                    <button type="button" class="button-iconn"
+                                                                        data-toggle="modal"
+                                                                        data-target="#imageModal-<%= curso.id_curso %>">
+                                                                        <i class="fas fa-image fa-2x"></i>
+                                                                        <!-- Ícono de imagen -->
+                                                                    </button>
+                                                                </td>
+                                                                <td><%= curso.estado %></td>
+                                                                <td>
+                                                                    <button type="button" class="button-iconn" data-toggle="modal" data-target="#editModal" 
+                                                                            data-id="<%= curso.id_curso %>" data-nombre="<%= curso.nombre_curso %>"
+                                                                            data-descripcion="<%= curso.descripcion %>" data-estado="<%= curso.estado %>">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </button>
+                                                                    <button type="button" class="button-iconn" onclick="confirmarEliminacion(<%= curso.id_curso %>)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+
+
+                                                            <div class="modal fade" id="imageModal-<%= curso.id_curso %>" tabindex="-1" role="dialog" 
+                                                                aria-labelledby="imageModalLabel-<%= curso.id_curso %>" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-sm" role="document"> <!-- Clase modal-sm para un tamaño más pequeño -->
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="imageModalLabel-<%= curso.id_curso %>">
+                                                                                <%= curso.nombre_curso %>
+                                                                            </h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white;">&times;</span> <!-- Cambiar color a blanco -->
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body text-center">
+                                                                            <!-- Imagen en tamaño completo -->
+                                                                            <img src="<%= curso.link %>" alt="<%= curso.nombre_curso %>" class="img-fluid">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <% }) %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="5">No hay cursos disponibles</td>
+                                                        </tr>
+                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+               <!-- Modal para agregar curso -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Agregar Curso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label for="addNombreCurso">Nombre del Curso</label>
+                        <input type="text" name="nombre_curso" class="form-control" id="addNombreCurso" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addDescripcionCurso">Descripción</label>
+                        <textarea name="descripcion" class="form-control" id="addDescripcionCurso" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="addDescripcionCurso">Imagen</label>
+                        <input type="file" name="file" class="form-control" required>
+                    </div>
+                    <div hidden>
+                        <label for="addEstadoCurso">Estado</label>
+                        <select name="estado" class="form-control" id="addEstadoCurso" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dark">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar curso -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Editar Curso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" name="id_curso" id="editIdCurso">
+
+                    <div class="form-group">
+                        <label for="editNombreCurso">Nombre del Curso</label>
+                        <input type="text" name="nombre_curso" class="form-control" id="editNombreCurso" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescripcionCurso">Descripción</label>
+                        <textarea name="descripcion" class="form-control" id="editDescripcionCurso" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editfile">Imagen</label>
+                        <input type="file" class="form-control" id="editfile" name="file">
+                    </div>
+                    <div class="form-group">
+                        <label for="editEstadoCurso">Estado</label>
+                        <select name="estado" class="form-control" id="editEstadoCurso" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dark">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+                    
+                    <!-- main-panel ends -->
+            </div>
+            <!-- page-body-wrapper ends -->
+            <script>
+
+
+
+                
+// Abrir el modal de edición al hacer clic en el botón de editar
+$('#miTabla').on('click', '.button-iconn[data-target="#editModal"]', function () {
+    const idCurso = $(this).data('id');
+    const nombreCurso = $(this).data('nombre');
+    const descripcion = $(this).data('descripcion');
+    const estado = $(this).data('estado');
+
+    // Asignar valores al formulario del modal
+    $('#editIdCurso').val(idCurso);
+    $('#editNombreCurso').val(nombreCurso);
+    $('#editDescripcionCurso').val(descripcion);
+    $('#editEstadoCurso').val(estado);
+
+    // Mostrar el modal de edición
+    $('#editModal').modal('show');
+});
+
+// Abrir el modal de imagen al hacer clic en el botón de imagen
+$('#miTabla').on('click', '.button-iconn[data-target^="#imageModal-"]', function () {
+    const targetModal = $(this).data('target'); // Obtener el ID dinámico del modal de imagen
+    $(targetModal).modal('show'); // Mostrar el modal de imagen correspondiente
+});
+
+
+const nombreCursoValido = /^[a-zA-Z]+( [a-zA-Z]+)*$/;
+
+$('#editForm').on('submit', function (event) {
+    event.preventDefault();
+
+    const nombreCurso = $('#editNombreCurso').val();
+
+    if (!nombreCursoValido.test(nombreCurso)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Nombre del curso inválido',
+            text: 'El nombre del curso solo puede contener letras y un único espacio entre palabras.',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    const fileInput = document.getElementById('editfile');
+    if (fileInput.files.length > 0) {
+        const fileType = fileInput.files[0].type;
+
+        // Validar tipo de archivo
+        if (!validImageTypes.includes(fileType)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Formato de archivo no permitido',
+                text: 'Solo se aceptan archivos de tipo: JPEG, PNG, GIF o WEBP.',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+    }
+
+    const idCurso = $('#editIdCurso').val();
+    const formData = new FormData();
+    formData.append('nombre_curso', $('#editNombreCurso').val());
+    formData.append('descripcion', $('#editDescripcionCurso').val());
+    formData.append('estado', $('#editEstadoCurso').val());
+
+    if (fileInput.files.length > 0) {
+        formData.append('file', fileInput.files[0]); // Agregar el archivo seleccionado
+    }
+
+    $('#spinner').show();
+
+    fetch(`/actualizar_curso/${idCurso}`, {
+        method: 'POST',
+        body: formData // Enviar el FormData directamente
+    })
+        .then(response => response.json())
+        .then(data => {
+            $('#spinner').hide();
+
+            if (data.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al actualizar',
+                    text: data.error || 'Error desconocido al actualizar',
+                    confirmButtonText: 'Aceptar'
+                });
+            } else if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Curso actualizado',
+                    text: 'El curso se ha actualizado correctamente.',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error al actualizar el curso:', error);
+            $('#spinner').hide();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error interno',
+                text: 'Ocurrió un error al actualizar el curso.',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+});
+$('#addForm').on('submit', function (event) {
+    event.preventDefault(); // Evitar envío por defecto
+
+    let nombreCurso = $('#addNombreCurso').val().trim();
+    nombreCurso = nombreCurso.replace(/\s+/g, ' '); // Normalizar nombre del curso
+
+    // Validación para el nombre del curso
+    if (!nombreCursoValido.test(nombreCurso)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Nombre del curso inválido',
+            text: 'El nombre del curso solo puede contener letras y un único espacio entre las palabras, sin espacios al principio ni al final.',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+
+    // Validación del archivo (solo imágenes permitidas)
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const fileInput = $('input[name="file"]')[0].files[0];
+    
+    if (!fileInput) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Archivo requerido',
+            text: 'Por favor, selecciona una imagen antes de continuar.',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+
+    if (!validImageTypes.includes(fileInput.type)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Formato de archivo no permitido',
+            text: 'Solo se aceptan archivos de tipo: JPEG, PNG, GIF o WEBP.',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+
+    // Crear FormData para enviar el archivo y los datos
+    const formData = new FormData();
+    formData.append('nombre_curso', nombreCurso);
+    formData.append('descripcion', $('#addDescripcionCurso').val());
+    formData.append('estado', $('#addEstadoCurso').val());
+    formData.append('file', fileInput);
+
+    // Mostrar spinner mientras se procesa
+    $('#spinner').show();
+
+    // Enviar solicitud al servidor
+    fetch('http://yamix.online/agregar_curso', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        $('#spinner').hide(); // Ocultar spinner
+
+        // Verificar si la respuesta contiene un error
+        if (data.error) {
+                // Mostrar alerta si el curso ya existe
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Curso duplicado',
+                    text: data.error, // Mostrar el mensaje del backend
+                    confirmButtonText: 'Aceptar'
+                });
+            }  else if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Curso agregado',
+                text: 'El curso se ha agregado correctamente.',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                window.location.reload(); // Recargar la página
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al agregar el curso',
+                text: 'El curso ya existe. Por favor, elige otro nombre.',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error al agregar el curso:', error);
+        $('#spinner').hide(); // Ocultar spinner en caso de error
+        Swal.fire({
+            icon: 'error',
+            title: 'Error interno',
+            text: 'El curso ya existe. Por favor, elige otro nombre.',
+            confirmButtonText: 'Aceptar'
+        });
+    });
+});
+
+
+$('#editModal').on('hidden.bs.modal', function () {
+    $('#editForm')[0].reset();
+    $('#spinner').hide(); 
+});
+
+$('.btn-dark[data-dismiss="modal"]').on('click', function () {
+    $('#editModal').modal('hide'); 
+});
+
+
+function confirmarEliminacion(idCurso) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then(result => {
+        if (result.isConfirmed) {
+            fetch(`/eliminar_curso/${idCurso}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Eliminado',
+                            text: 'El curso se ha eliminado correctamente.',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.error || 'Error desconocido al eliminar el curso'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al eliminar el curso:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error interno',
+                        text: 'Ocurrió un error al eliminar el curso.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                });
+        }
+    });
+}
+
+document.getElementById('exportPdf').addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf; 
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = 'img/yamix_logo_mini.png';
+
+    logo.onload = async () => {
+        const logoWidth = 40; // Ancho del logo
+        const logoHeight = 20; // Alto del logo
+        const logoX = 10; // Posición X
+        const logoY = 10; // Posición Y
+
+      
+        doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+
+        const canvas = await html2canvas(document.querySelector('.table-responsive'));
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; 
+        const pageHeight = 295; 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 30; 
+
+     
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+       
+        doc.save('cursos.pdf');
+    };
+});
+
+
+function exportToExcel() {
+    let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "cursos" });
+    XLSX.writeFile(wb, 'cursos.xlsx');
+}
+            </script>
+            
+            
+            
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <%- include('partials/scripts') %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <!-- End custom js for this page -->
+</body>
+
+</html>

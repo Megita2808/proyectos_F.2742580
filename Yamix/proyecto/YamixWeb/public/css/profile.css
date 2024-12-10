@@ -1,0 +1,107 @@
+#hola {
+    background: #616161;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #BA68C8;
+}
+
+.profile-button {
+    background: #BA68C8;
+    box-shadow: none;
+    border: none;
+}
+
+.profile-button:hover {
+    background: #616161;
+}
+
+.profile-button:focus {
+    background: #000000;
+    box-shadow: none;
+}
+
+#boton {
+    box-shadow: none;
+    color: white;
+
+}
+
+
+#openModalBtn {
+    position: relative;
+    box-shadow: none;
+    color: white;
+    top: -35px;
+
+}
+
+#boton3 {
+    position: relative;
+    box-shadow: none;
+    color: white;
+    top: -75px;
+}
+
+.back:hover {
+    color: #878288;
+    cursor: pointer;
+}
+
+/* Estilos generales de la tabla */
+table {
+    width: 100%;
+    border: 2px solid blue;
+    border-radius: 10px;
+}
+
+/* Estilos de las celdas de encabezado */
+th {
+    background-color: #f2f2f2;
+
+    padding: 1px;
+    text-align: center;
+}
+
+/* Estilos de las celdas de datos */
+td {
+    border: 1px solid blue;
+    padding: 8px;
+    text-align: center;
+}
+
+/* Estilo para las celdas con contenido "Libre" */
+td span:contains("--------") {
+    background-color: rgba(0, 0, 255, 0.3);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    /* Cambia el ancho máximo según tus preferencias */
+}
+
+/* Estilo para el botón de cierre */
+.close {
+    float: right;
+    cursor: pointer;
+}

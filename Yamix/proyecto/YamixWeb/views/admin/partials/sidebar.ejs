@@ -1,0 +1,119 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+    <a class="sidebar-brand brand-logo" href="/dashboard"><img src="img/yamix_logo.png" alt="logo" /></a>
+      <img src="img/yamix_logo_mini.png" alt="logo" class="img-custom-size" />
+  </a>
+    <a class="sidebar-brand brand-logo-mini" href="/dashboard "><img src="img/yamix_logo_mini.png" alt="logo"/></a>
+  </div>
+    <ul class="nav">
+      <li class="nav-item profile">
+    
+      </li>
+      <li class="nav-item nav-category">
+        <span class="nav-link">Navegación</span>
+      </li>
+      <% if (permisos.includes('dashboard')) { %>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/dashboard">
+          <span class="menu-icon">
+            <i class="mdi mdi-speedometer"></i>
+          </span>
+          <span class="menu-title">Dashboard</span>
+        </a>
+      </li>
+      <% } %>
+      <% if (permisos.includes('permisos')) { %>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/permisos">
+            <span class="menu-icon">
+                <i class="mdi mdi-laptop"></i>
+            </span>
+            <span class="menu-title">Permisos</span>
+        </a>
+        </li>
+    <% } %>
+      <% if (permisos.includes('usuarios')) { %>
+        <li class="nav-item menu-items">
+          <a class="nav-link" data-toggle="collapse" href="#usuariosSubmenu" aria-expanded="false" aria-controls="usuariosSubmenu">
+            <span class="menu-icon">
+              <i class="mdi mdi-playlist-play"></i>
+            </span>
+            <span class="menu-title">Usuarios</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="usuariosSubmenu">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="/usuariosAdmin">Todos</a></li>
+              <li class="nav-item"> <a class="nav-link" href="/profesoresAdmin">Profesores</a></li>
+              <li class="nav-item"> <a class="nav-link" href="/estudiantesAdmin">Estudiantes</a></li>
+              <li class="nav-item"> <a class="nav-link" href="/userEsperaAdmin">En espera</a></li>
+              <li class="nav-item"> <a class="nav-link" href="/userDeshabilitadoAdmin">Deshabilitados</a></li>
+              <li class="nav-item"> <a class="nav-link" href="/userOtrosAdmin">Otros</a></li>
+            </ul>
+          </div>
+        </li>
+         <% } %>
+      <% if (permisos.includes('asistencia admin')) { %>
+
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/asistencia">
+          <span class="menu-icon">
+            <i class="mdi mdi-table-large"></i>
+          </span>
+          <span class="menu-title">Asistencia</span>
+        </a>
+      </li>
+      <% } %>
+      <% if (permisos.includes('clases')) { %>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/clasesAdmin">
+          <span class="menu-icon">
+            <i class="mdi mdi-chart-bar"></i>
+          </span>
+          <span class="menu-title">Clases </span>
+        </a>
+      </li>
+      <% } %>
+      <% if (permisos.includes('cursos')) { %>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/cursosAdmin">
+          <span class="menu-icon">
+            <i class="mdi mdi-contacts"></i>
+          </span>
+          <span class="menu-title">Cursos</span>
+        </a>
+      </li>
+      <% } %>
+      <% if (permisos.includes('calendario')) { %>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/calendarioAdmin">
+        <span class="menu-icon">
+          <i class="mdi mdi-contacts"></i>
+        </span>
+        <span class="menu-title">Calendario</span>
+      </a>
+    </li>
+    <% } %>
+    <% if (permisos.includes('catalogo admin')) { %>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="/catalogoAdmin">
+        <span class="menu-icon">
+          <i class="mdi mdi-table"></i>
+        </span>
+        <span class="menu-title">Catálogo</span>
+      </a>
+    </li>
+    <% } %>
+   
+    </ul>
+  </nav>
+  <style>
+  
+    .img-custom-size {
+        width: 70px; 
+        height: auto; 
+        max-width: 150%; 
+    }
+    
+    
+    </style>

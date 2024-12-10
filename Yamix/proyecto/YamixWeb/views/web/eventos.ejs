@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Calendario</title>
+    <link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="c/css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+     
+#calendar {
+    transform: scale(1);  
+    transform-origin: top left;  
+    margin: 0 auto;  
+}
+
+    
+.fc-event {
+    font-size: 14px; 
+    padding: 5px;     
+    min-height: 40px;
+    border-radius: 5px; 
+}
+
+
+.fc-day, .fc-day-number {
+    height: 80px !important; 
+}
+
+
+.fc-event:hover {
+    transform: scale(1.05);  
+    z-index: 1000;  
+}
+
+    </style>
+</head>
+
+</div>
+<body class="bg-white">
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+        <%- include('partials/topbar') %>
+    </div>
+<!-- Navbar End -->
+
+
+
+  <!-- Page Header Start -->
+  <div class="container-fluid page-header mb-5">
+      <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+          <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Eventos</h4>
+          <div class="d-inline-flex">
+              <p class="m-0 text-white"><a class="text-white" href="">Home</a></p>
+              <p class="m-0 text-white px-2">/</p>
+              <p class="m-0 text-white">Eventos</p>
+          </div>
+      </div>
+  </div>
+  <!-- Page Header End -->
+
+
+  
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/p/js/popper.min.js"></script>
+<script src="/p/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/p/js/moment.min.js"></script>
+<script type="text/javascript" src="/p/js/fullcalendar.min.js"></script>
+<script src='/p/js/locales/es.js'></script>
+
+<!-- Modal para Ver Detalles -->
+<div class="modal fade" id="modalVerDetalle" tabindex="-1" role="dialog" aria-labelledby="modalVerDetalleLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVerDetalleLabel">Detalle del Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-12 control-label">Nombre del Evento:</label>
+                    <div class="col-sm-10">
+                        <p id="detalleNombre" class="form-control-static"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-12 control-label">Curso:</label>
+                    <div class="col-sm-10">
+                        <p id="detalleCurso" class="form-control-static"></p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-12 control-label">Descripción:</label>
+                    <div class="col-sm-10">
+                        <p id="detalleDescripcion" class="form-control-static"></p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-12 control-label">Ubicación:</label>
+                    <div class="col-sm-10">
+                        <p id="detalleUbicacion" class="form-control-static"></p>
+                    </div>
+                </div>
+                  
+                <div class="form-group">
+                    <label class="col-sm-12 control-label">Fecha y Hora de Inicio:</label>
+                    <div class="col-sm-10">
+                        <p id="detalleFechaInicio" class="form-control-static"></p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-12 control-label">Fecha y Hora de Finalización:</label>
+                    <div class="col-sm-10">
+                        <p id="detalleFechaFin" class="form-control-static"></p>
+                    </div>
+                </div>
+
+            
+           
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Gym Class Start -->
+<div class="container gym-class mb-5" style="margin-top: 90px;">
+    <div class="row px-3">
+        <div class="col-md-6 p-0">
+            <div class="gym-class-box d-flex flex-column align-items-end justify-content-center bg-primary text-right text-white py-5 px-5">
+                <i class="flaticon-six-pack"></i>
+                    <h3 class="display-4 mb-3 text-white font-weight-bold">Eventos</h3>
+                    <p>
+                        Aquí podrás ver la programación de los eventos que se llevarán a cabo durante el mes. Explora las clases,  y actividades programadas. No importa si eres principiante o un experto, siempre hay algo nuevo para aprender. 
+                    </p>
+                    <a href="" class="btn btn-lg btn-outline-light mt-4 px-4">Ver</a>
+                </div>
+        </div>
+        <div class="col-md-6 p-0">
+            <div class="gym-class-box d-flex flex-column align-items-start justify-content-center bg-secondary text-left text-white py-5 px-5">
+                <i class="flaticon-bodybuilding"></i>
+                <h3 class="display-4 mb-3 text-white font-weight-bold">Clases</h3>
+                <p>
+                     Únete a nuestras clases diseñadas para todos los niveles. Ya sea que busques iniciarte en las artes marciales, aprender defensa personal o perfeccionar tu técnica, tenemos algo para ti. 
+                </p>
+                <a href="/" class="btn btn-lg btn-outline-light mt-4 px-4">Unirse</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Gym Class End -->
+
+<body>
+    <div class="d-flex">
+        <!-- Contenido principal -->
+        <div class="main-content flex-grow-1">
+            <div class="container mt-5">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles -->
+    <div id="modalVerDetalle"></div>
+
+    <!-- Script para inicializar el calendario -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                locale: 'es',
+                events: function(start, end, timezone, callback) {
+    $.ajax({
+        url: 'http://35.199.176.100/api/traer_eventosU',
+        dataType: 'json',
+        success: function(data) {
+            var events = data.map(event => ({
+                _id: event.id_evento,
+                title: event.nombre_evento,
+                start: moment(event.fecha_hora_inicio).toISOString(),
+                end: moment(event.fecha_hora_final).toISOString(),
+                color: event.color_evento,
+                descripcion: event.descripcion,
+                ubicacion: event.ubicacion,
+                nombre_curso: event.nombre_curso // Incluye el nombre del curso
+            }));
+            callback(events);
+        }
+    });
+},
+eventClick: function(event) {
+    $('#detalleNombre').text(event.title || 'Sin nombre');
+    $('#detalleDescripcion').text(event.descripcion || 'Sin descripción');
+    $('#detalleUbicacion').text(event.ubicacion || 'Sin ubicación');
+    $('#detalleFechaInicio').text(event.start ? moment(event.start).format('DD/MM/YYYY HH:mm') : 'Sin inicio');
+    $('#detalleFechaFin').text(event.end ? moment(event.end).format('DD/MM/YYYY HH:mm') : 'Sin finalización');
+    $('#detalleCurso').text(event.nombre_curso || 'No asignado'); // Muestra el nombre del curso
+    $('#detalleColor').css('background-color', event.color || '#378006');
+    $('#modalVerDetalle').modal('show');
+}
+
+            });
+        });
+    </script>
+</body>
+<!-- Footer Start -->
+<%- include('partials/footer') %>
+  <!-- Footer End -->

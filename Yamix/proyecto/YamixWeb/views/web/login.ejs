@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>YAMIX</title>
+  <link rel="stylesheet" href="css/login.css">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+
+<body>
+    
+  <!-- partial:index.partial.html -->
+  <section id="login">
+    <div class="form-box">
+      <div class="form-value">
+        <form  id="restablecerForm" action="/logueo" method="post" onsubmit="validarFormulario(event)">
+          <h2>Inicio de sesión</h2>
+          <br>
+          <br>
+          <div class="inputbox">
+              <ion-icon name="mail-outline"></ion-icon>
+              <input id="correo" name="correo" type="email" >
+              <label for="">Correo</label>
+          </div>
+          <br>
+          <div class="inputbox"id="confirmarContraseñaBox">
+            <ion-icon name="eye-off-outline" class="show-password" onclick="togglePassword('contraseña', this)"></ion-icon>
+              <input id="contraseña" name="contraseña" type="password" >
+              <label for="confirmarContraseña">Contraseña</label>
+          </div>
+          <br>    
+          <div class="g-recaptcha" data-sitekey="6Le2640qAAAAAOck_dTlrMgxvOAmMhFve0-OksUT"></div>
+          <br>
+          <div class="forget">
+              <label>
+                  <input name="rememberMe" type="checkbox"> Recuérdame
+              </label>
+              <label>
+                  <a href="/recuperar">¿Olvidaste la contraseña?</a>
+              </label>
+          </div>
+          <button> Iniciar Sesión </button>
+          <div class="register">
+              <p>¿No tienes cuenta? <a href="/register">Regístrate</a></p>
+          </div>
+      </form>      
+      </div>
+    </div>
+  </section>
+  <!-- partial -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+  <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+
+  <script>
+    async function validarFormulario(event) {
+        event.preventDefault();
+        // Obtener la respuesta de reCAPTCHA
+        const captchaResponse = grecaptcha.getResponse();
+    
+        if (!captchaResponse) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Por favor, verifica que no eres un robot."
+            });
+            grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+            return;
+        }
+
+        // Verificar el captcha en el servidor
+        try {
+            const captchaResponseData = await fetch('http://35.199.176.100/api/verify-captcha', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ captchaResponse })
+            });
+
+            const verificationResult = await captchaResponseData.json();
+            console.log("Resultado de verificación de reCAPTCHA:", verificationResult);
+
+            if (!verificationResult.success) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Verificación de reCAPTCHA fallida."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                return;
+            }
+        } catch (error) {
+            console.error("Error al verificar reCAPTCHA:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Hubo un error al verificar reCAPTCHA."
+            });
+            grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+            return;
+        }
+
+        const contraseña = document.getElementById('contraseña').value.trim();
+        const correo = document.getElementById('correo').value.trim();
+
+        // Validación de campos vacíos
+        if (!correo || !contraseña) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Todos los campos son necesarios.'
+            });
+            grecaptcha.reset();
+            return;
+        }
+
+        try {
+            // Enviar datos al controlador
+            const response = await fetch('http://yamix.online/logueo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ correo, contraseña })
+            });
+
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('Content-Type');
+            if (contentType?.includes('application/json')) {
+                const resultado = await response.json();
+
+                console.log('Código de respuesta:', response.status);
+
+                if (response.status === 202) { 
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Cuenta en espera',
+                        text: 'Por favor, completa la documentación requerida en perfil',
+                        timer: 4000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        setTimeout(() => {
+                            window.location.href = '/perfil'; // Redirige a la ruta del backend
+                        });
+                    });
+                } else if (response.status === 403) {
+                    grecaptcha.reset();
+                    // Manejo de usuario deshabilitado
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario deshabilitado',
+                        text: 'Tu cuenta está deshabilitada. Contacta al administrador para más información.'
+                    });
+                } else if (response.status === 200) {
+                    // Manejo de inicio de sesión exitoso
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Inicio de sesión exitoso',
+                        text: 'Redirigiendo...',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = resultado.ruta; // Redirige a la ruta del backend
+                    });
+                } else if (response.status === 401) {
+                    grecaptcha.reset();
+                    // Manejo de errores de autenticación
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: resultado.message || 'Credenciales incorrectas. Intenta nuevamente.'
+                    });
+                }
+            } else {
+                grecaptcha.reset();
+                // Manejar respuestas no JSON
+                console.error('Respuesta no JSON:', await response.text());
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error en el servidor',
+                    text: 'Respuesta inesperada del servidor.'
+                });
+            }
+        } catch (error) {
+            grecaptcha.reset();
+            console.error('Error de conexión:', error);
+            // Manejo de errores de conexión o excepciones
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema con el servidor. Intenta más tarde.'
+            });
+        }
+    }
+
+    function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.name = "eye-outline";
+        } else {
+            input.type = "password";
+            icon.name = "eye-off-outline";
+        }
+    }
+</script>
+
+
+
+
+
+  <script>
+  <% if (typeof alert !== 'undefined') { %>
+      Swal.fire({
+        icon: '<%= alertType %>',
+        title: '<%= alertType === "success" ? "¡Éxito!" : "¡Error!" %>',
+        text: '<%= alert %>',
+        confirmButtonText: 'Aceptar'
+      }).then(() => {
+        window.location = '/<%= ruta %>';  // Redirige después de cerrar la alerta
+      });
+  <% } %>
+  </script>
+</body>
+
+</html>

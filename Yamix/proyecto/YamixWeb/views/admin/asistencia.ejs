@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+    <%- include('partials/scripts') %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container-scroller">
+        <%- include('partials/sidebar') %>
+        <div class="container-fluid page-body-wrapper">
+            <%- include('partials/topbar') %>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="card-title">Asistencia</h3>
+                                    <div>
+                                        <button id="exportPdf" class="btn btn-outline-secondary btn-fw">
+                                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-fw" onclick="exportToExcel()">
+                                            <i class="fas fa-file-excel"></i> Exportar a Excel
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-fw" data-toggle="modal"
+                                            data-target="#addModal">
+                                            <i class="fas fa-plus"></i> Agregar
+                                        </button>
+
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="miTabla" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Curso</th>
+                                                <th>Fecha</th>
+                                                <th>Hora Inicio</th>
+                                                <th>Hora Final</th>
+                                                <th>Instructor</th>
+                                                <th>Estudiantes</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% 
+                                            const hoy = new Date();
+                                            const haceUnMes = new Date();
+                                            haceUnMes.setMonth(hoy.getMonth() - 1);
+                                    
+                                            const asistenciasFiltradas = dataAsistencias.filter(asistencia => {
+                                                const fechaAsistencia = new Date(asistencia.fecha_asistencia);
+                                                return fechaAsistencia <= hoy && fechaAsistencia >= haceUnMes;
+                                            });
+                                            %>
+                                            <% if (asistenciasFiltradas.length > 0) { %>
+                                                <% asistenciasFiltradas.forEach(function(asistencia) { %>
+                                                <tr>
+                                                    <td><%= asistencia.nombre_curso %></td>
+                                                    <td>
+                                                        <% 
+                                                        const fechaAsistencia = new Date(asistencia.fecha_asistencia);
+                                                        const dia = fechaAsistencia.getDate();
+                                                        const mes = fechaAsistencia.toLocaleString('es-ES', { month: 'long' }).charAt(0).toUpperCase() + fechaAsistencia.toLocaleString('es-ES', { month: 'long' }).slice(1);
+                                                        const año = fechaAsistencia.getFullYear();
+                                                        const fechaFinal = `${dia} de ${mes} del ${año}`;
+                                                        %>
+                                                        <%= fechaFinal %>
+                                                    </td>
+                                                    <td>
+                                                        <% if (asistencia.hora_inicio) { %>
+                                                            <% 
+                                                            const horaInicio = new Date(`1970-01-01T${asistencia.hora_inicio}`);
+                                                            let horaInicioFormatted = horaInicio.getHours();
+                                                            let minutosInicio = horaInicio.getMinutes();
+                                                            const ampmInicio = horaInicioFormatted >= 12 ? 'p.m.' : 'a.m.';
+                                                            horaInicioFormatted = horaInicioFormatted % 12 || 12;
+                                                            minutosInicio = minutosInicio < 10 ? '0' + minutosInicio : minutosInicio;
+                                                            const horaInicioFinal = `${horaInicioFormatted}:${minutosInicio} ${ampmInicio}`;
+                                                            %>
+                                                            <%= horaInicioFinal %>
+                                                        <% } else { %>
+                                                            Sin hora de inicio
+                                                        <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <% if (asistencia.hora_final) { %>
+                                                            <% 
+                                                            const horaFinal = new Date(`1970-01-01T${asistencia.hora_final}`);
+                                                            let horaFinalFormatted = horaFinal.getHours();
+                                                            let minutosFinal = horaFinal.getMinutes();
+                                                            const ampmFinal = horaFinalFormatted >= 12 ? 'p.m.' : 'a.m.';
+                                                            horaFinalFormatted = horaFinalFormatted % 12 || 12;
+                                                            minutosFinal = minutosFinal < 10 ? '0' + minutosFinal : minutosFinal;
+                                                            const horaFinalFormattedFinal = `${horaFinalFormatted}:${minutosFinal} ${ampmFinal}`;
+                                                            %>
+                                                            <%= horaFinalFormattedFinal %>
+                                                        <% } else { %>
+                                                            Sin hora final
+                                                        <% } %>
+                                                    </td>
+                                                    <td><%= asistencia.nombre_instructor %></td>
+                                                    <td>
+                                                        <button class="button-iconn" data-bs-toggle="modal" data-bs-target="#editEstudiantesModal" data-id="<%= asistencia.id_asistencia %>">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="button-iconn" data-toggle="modal" data-target="#editModal" 
+                                                                data-id="<%= asistencia.id_asistencia %>" 
+                                                                data-id_curso="<%= asistencia.id_curso %>" 
+                                                                data-hora-inicio="<%= asistencia.hora_inicio %>" 
+                                                                data-hora-final="<%= asistencia.hora_final %>"
+                                                                data-usuario="<%= asistencia.nombre_instructor %>" 
+                                                                data-estado="Activo"
+                                                                data-fecha-asistencia="<%= asistencia.fecha_asistencia %>">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="8" class="text-center">No hay asistencias en el rango de fechas especificado</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>                                                                                                          
+                                </div>
+                                <!-- Botón para Ver Historial -->
+                                <div class="d-flex justify-content-between mt-3">
+                                    <a href="/historialAsistenciaAdmin" class="btn btn-outline-primary">
+                                        <i class="fas fa-history"></i> Ver Historial
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal estudiantes -->
+                    <div class="modal fade" id="editEstudiantesModal" tabindex="-1" role="dialog" aria-labelledby="editEstudiantesModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editEstudiantesModalLabel">Asistencia de Estudiantes</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="card-description">Estudiantes presentes y ausentes en la clase</p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Estudiantes Presentes</h6>
+                                            <div id="presentStudentsContainer"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Estudiantes Ausentes</h6>
+                                            <div id="absentStudentsContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                    <!-- Botón para guardar cambios -->
+                                    <button type="button" class="btn btn-primary" id="saveChangesButton">Guardar cambios</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Modal para agregar asistencia -->
+                    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addModalLabel">Agregar Asistencia</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addForm">
+                                        <div class="form-group">
+                                            <label for="fecha_asistencia">Fecha:</label>
+                                            <input type="date" class="form-control" id="fecha_asistencia" name="fecha_asistencia" required>
+                                            <span id="fechaError" class="text-danger" style="display: none;">La fecha debe estar entre el 4 de octubre y el 4 de diciembre.</span>
+                                        </div>                                        
+
+                                        <div class="form-group">
+                                            <label for="id_clase">Clase:</label>
+                                            <select class="form-control" id="id_clase" name="id_clase" required>
+                                                <option value="" disabled selected>Seleccione una clase</option>
+                                                <% if (dataClases && dataClases.length) { %>
+                                                    <% dataClases.forEach(function(clase) { 
+                                                        if (clase.estado === 'activo') {
+                                                            function formatTimeTo12Hour(time) {
+                                                                let [hours, minutes] = time.split(":");
+                                                                let suffix = hours >= 12 ? "p.m." : "a.m.";
+                                                                hours = hours % 12 || 12; // Convertir a formato 12 horas
+                                                                return `${hours}:${minutes} ${suffix}`;
+                                                            }
+
+                                                            let startTime = formatTimeTo12Hour(clase.hora_inicio);
+                                                            let endTime = formatTimeTo12Hour(clase.hora_final);
+                                                    %>
+                                                            <option value="<%= clase.id_clase %>">
+                                                                <%= clase.nombre_curso %> - <%= startTime %> a <%= endTime %>
+                                                            </option>
+                                                    <% 
+                                                        } 
+                                                    }); %>
+                                                <% } else { %>
+                                                    <option value="">No hay clases disponibles</option>
+                                                <% } %>
+                                            </select>
+                                        </div>                                                                                                                        
+
+                                        <div id="estudiantes_container" class="form-group">
+                                            <!-- Los checkboxes de estudiantes se agregarán aquí -->
+                                        </div>
+
+                                        <button type="submit" class="btn btn-dark">Agregar Asistencia</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para editar la fecha de la asistencia -->
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Editar Fecha de Asistencia</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editForm">
+                                        <input type="hidden" name="id" id="editId">
+                                        <div class="form-group">
+                                            <label for="editFecha">Fecha de Asistencia</label>
+                                            <input type="date" name="fecha_asistencia" class="form-control" id="editFecha" required>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-dark">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtener la fecha actual
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Establecer la hora a las 00:00:00 para evitar seleccionar el día siguiente
+            
+            const todayString = today.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+            
+            // Calcular la fecha de hace dos meses
+            const twoMonthsAgo = new Date(today);
+            twoMonthsAgo.setMonth(today.getMonth() - 2); // Restar 2 meses
+            const twoMonthsAgoString = twoMonthsAgo.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+            
+            // Configurar los atributos 'min' y 'max' en los campos de fecha
+            const fechaAsistencia = document.getElementById('fecha_asistencia');
+            const editFecha = document.getElementById('editFecha');
+            
+            if (fechaAsistencia) {
+                fechaAsistencia.setAttribute('min', twoMonthsAgoString);
+                fechaAsistencia.setAttribute('max', todayString);
+            }
+            
+            if (editFecha) {
+                editFecha.setAttribute('min', twoMonthsAgoString);
+                editFecha.setAttribute('max', todayString);
+            }
+            
+            // Validación adicional al intentar enviar el formulario
+            document.getElementById('addForm').addEventListener('submit', function (event) {
+                const fechaSeleccionada = fechaAsistencia.value;
+                
+                // Comprobar que la fecha esté dentro del rango permitido
+                if (fechaSeleccionada < twoMonthsAgoString || fechaSeleccionada > todayString) {
+                    alert(`La fecha de asistencia debe estar entre ${twoMonthsAgoString} y ${todayString}.`);
+                    event.preventDefault(); // Detener el envío del formulario si la fecha es incorrecta
+                }
+            });
+        });
+    </script>    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Llenar los estudiantes cuando cambie la clase o la fecha
+            const fechaAsistenciaInput = document.getElementById('fecha_asistencia');
+            const idClaseSelect = document.getElementById('id_clase');
+            
+            const estudiantesContainer = document.getElementById('estudiantes_container');
+
+            const cargarEstudiantes = async () => {
+                const idClase = idClaseSelect.value;
+                const fechaAsistencia = fechaAsistenciaInput.value;
+
+                if (!idClase || !fechaAsistencia) {
+                    return; // No realizar la consulta si no se han seleccionado la clase o la fecha
+                }
+
+                try {
+                    // Realizar una solicitud GET pasando la fecha como parámetro en la URL
+                    const response = await fetch(`http://35.199.176.100/api/claseEstudiante/${idClase}?fecha_asistencia=${fechaAsistencia}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Error en la solicitud: ${response.status}`);
+                    }
+
+                    const estudiantes = await response.json();
+
+                    // Limpiar la lista de estudiantes
+                    estudiantesContainer.innerHTML = '';
+
+                    // Llenar la lista con los estudiantes obtenidos
+                    estudiantes.forEach(estudiante => {
+                        const checkboxHtml = `
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="estudiantes" id="estudiante-${estudiante.id_usuario}" data-estudiante-id="${estudiante.id_usuario}">
+                                <label class="form-check-label" for="estudiante-${estudiante.id_usuario}">
+                                    ${estudiante.nombre} ${estudiante.apellido}
+                                </label>
+                            </div>
+                        `;
+                        estudiantesContainer.innerHTML += checkboxHtml;
+                    });
+                } catch (error) {
+                    console.error('Error al obtener los estudiantes:', error);
+                }
+            };
+
+            // Cargar los estudiantes cuando cambie la fecha
+            fechaAsistenciaInput.addEventListener('change', cargarEstudiantes);
+
+            // Cargar los estudiantes cuando cambie la clase
+            idClaseSelect.addEventListener('change', cargarEstudiantes);
+            
+            document.getElementById('addForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const id_clase = document.getElementById('id_clase').value;
+    const fecha_asistencia = document.getElementById('fecha_asistencia').value;
+
+    // Obtener los estudiantes de los checkboxes seleccionados
+    const allCheckboxes = document.querySelectorAll('input[name="estudiantes"]');
+    const estudiantes = Array.from(allCheckboxes).map(checkbox => ({
+        id_usuario: checkbox.dataset.estudianteId, // Usamos el data-estudiante-id para obtener el ID
+        presente: checkbox.checked ? 1 : 0
+    }));
+
+    // Verificar que los campos no estén vacíos
+    if (!id_clase || !fecha_asistencia) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Por favor, complete todos los campos.',
+        });
+        return;
+    }
+
+    const data = {
+        id_clase,
+        fecha_asistencia,
+        estudiantes
+    };
+
+    try {
+        const response = await fetch('/crear_asistencia', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.message || 'Error en el servidor');
+        }
+
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+            icon: 'success',
+            title: '¡Asistencia creada!',
+            text: result.message,
+        }).then(() => {
+            // Limpiar el formulario y la lista de estudiantes después de cerrar SweetAlert
+            document.getElementById('addForm').reset();
+            document.getElementById('estudiantes_container').innerHTML = '';
+            window.location.reload();
+        });
+    } catch (error) {
+        console.error('Error al enviar datos:', error);
+        // Mostrar mensaje de error con SweetAlert
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al enviar datos: ' + error.message,
+        });
+    }
+
+
+            });
+        });
+    </script>    
+    
+    
+    <script>
+        $(document).ready(function() {
+            $('#miTabla').DataTable();
+            
+            // Modal para editar estudiantes por asistencia
+            $('#editEstudiantesModal').on('show.bs.modal', async function(event) {
+                const button = $(event.relatedTarget); // Capturar el botón que abrió la modal
+                const id_asistencia = button.data('id'); // Obtener el id_asistencia del botón
+    
+                // Guardar el id_asistencia en los datos de la modal
+                $(this).data('id', id_asistencia); // Esto permite acceder a id_asistencia más tarde
+    
+                try {
+                    const response = await fetch(`http://35.199.176.100/api/estudiantesPorAsistencia/${id_asistencia}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+    
+                    const data = await response.json();
+                    const estudiantesPresentesContainer = document.getElementById('presentStudentsContainer');
+                    const estudiantesAusentesContainer = document.getElementById('absentStudentsContainer');
+    
+                    // Verificar si los contenedores de estudiantes existen en el DOM
+                    if (!estudiantesPresentesContainer || !estudiantesAusentesContainer) {
+                        console.error('Error: Uno o ambos contenedores de estudiantes no se encontraron');
+                        return;
+                    }
+    
+                    // Limpiar contenedores de estudiantes
+                    estudiantesPresentesContainer.innerHTML = '';
+                    estudiantesAusentesContainer.innerHTML = '';
+    
+                    // Separar estudiantes en presentes y ausentes según el valor de "presente"
+                    data.estudiantes.forEach(estudiante => {
+                        const checkboxHtml = `
+                            <div class="form-check">
+                                <input 
+                                    type="checkbox" 
+                                    class="form-check-input" 
+                                    name="estudiantes" 
+                                    id="estudiante-${estudiante.id_usuario}" 
+                                    value="${estudiante.id_usuario}" 
+                                    ${estudiante.presente === 1 ? 'checked' : ''}
+                                >
+                                <label 
+                                    class="form-check-label" 
+                                    for="estudiante-${estudiante.id_usuario}">
+                                    ${estudiante.nombre} ${estudiante.apellido}
+                                </label>
+                            </div>
+                        `;
+    
+                        // Dividir entre estudiantes presentes y ausentes
+                        if (estudiante.presente === 1) {
+                            estudiantesPresentesContainer.innerHTML += checkboxHtml;
+                        } else {
+                            estudiantesAusentesContainer.innerHTML += checkboxHtml;
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error al obtener los estudiantes de la asistencia:', error);
+                }
+            });
+    
+            document.getElementById('saveChangesButton').addEventListener('click', async function () {
+    const id_asistencia = $('#editEstudiantesModal').data('id'); // Obtener id_asistencia guardado en la modal
+    const checkboxes = document.querySelectorAll('input[name="estudiantes"]');
+    const cambios = [];
+
+    // Recolectar el estado de los checkboxes (presente o ausente)
+    checkboxes.forEach(checkbox => {
+        cambios.push({
+            id_usuario: checkbox.value,
+            presente: checkbox.checked ? 1 : 0
+        });
+    });
+
+    // Verificar los datos antes de enviarlos
+    console.log("Datos enviados:", { id_asistencia, cambios });
+
+    try {
+        const response = await fetch(`http://35.199.176.100/api/actualizar_asistencia_estudiantes`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_asistencia, cambios })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al actualizar la asistencia de los estudiantes');
+        }
+
+        const result = await response.json();
+
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+            icon: 'success',
+            title: '¡Cambios guardados!',
+            text: result.message,
+        }).then(() => {
+            // Cerrar la modal después de confirmar el mensaje
+            $('#editEstudiantesModal').modal('hide');
+        });
+
+    } catch (error) {
+        console.error('Error al guardar los cambios:', error);
+
+        // Mostrar mensaje de error con SweetAlert
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al guardar los cambios: ' + error.message,
+        });
+    }
+
+
+            });
+        });
+    </script>
+    
+    
+<script>
+ $(document).ready(function () {
+    // Abrir la modal para editar la fecha de la asistencia
+    $('#editModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget); // Obtener el botón que abrió la modal
+
+        // Verificar los datos que estamos obteniendo del botón
+        const id_asistencia = button.data('id');
+        const fecha_asistencia = button.data('fecha-asistencia');
+        console.log('ID Asistencia:', id_asistencia); // Verifica el valor del ID
+        console.log('Fecha Asistencia:', fecha_asistencia); // Verifica el valor de la fecha
+
+        // Asegurarse de que los valores existen antes de asignarlos a los campos
+        if (id_asistencia && fecha_asistencia) {
+            document.getElementById('editId').value = id_asistencia; // Establecer el id de la asistencia
+            document.getElementById('editFecha').value = fecha_asistencia.split('T')[0]; // Asignar la fecha directamente
+        } else {
+            console.error('No se obtuvieron los datos correctamente del botón');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron obtener los datos correctamente del botón.',
+            });
+        }
+    });
+
+    // Manejar la acción de guardar los cambios
+    $('#editForm').on('submit', async function (event) {
+        event.preventDefault();
+
+        const id_asistencia = document.getElementById('editId').value;
+        const fecha_asistencia = document.getElementById('editFecha').value;
+
+        try {
+            // Enviar los datos actualizados a la API
+            const response = await fetch(`http://35.199.176.100/api/actualizar_asistencia/${id_asistencia}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fecha_asistencia }) // Solo la fecha
+            });
+
+            // Manejar errores de la API
+            const result = await response.json();
+            if (!response.ok) {
+                // Mostrar el mensaje de error de la API
+                throw new Error(result.message || 'Error desconocido');
+            }
+
+            // Si todo salió bien
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: result.message,
+            }).then(() => {
+                $('#editModal').modal('hide'); // Cerrar la modal
+                location.reload(); // Recargar la página
+            });
+        } catch (error) {
+            console.error('Error al guardar los cambios:', error);
+            // Mostrar el mensaje de error devuelto por la API al usuario
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al guardar',
+                text: error.message,
+            });
+        }
+    });
+});
+
+    document.getElementById('exportPdf').addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf; 
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = 'img/yamix_logo_mini.png';
+
+    logo.onload = async () => {
+        const logoWidth = 40; // Ancho del logo
+        const logoHeight = 20; // Alto del logo
+        const logoX = 10; // Posición X
+        const logoY = 10; // Posición Y
+
+      
+        doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+
+        const canvas = await html2canvas(document.querySelector('.table-responsive'));
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; 
+        const pageHeight = 295; 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 30; 
+
+     
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+       
+        doc.save('asistencia.pdf');
+    };
+});
+
+
+function exportToExcel() {
+    let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "asistencia" });
+    XLSX.writeFile(wb, 'asistencia.xlsx');
+}
+</script>
+
+   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+ 
+    
+    
+    
+</body>
+</html>

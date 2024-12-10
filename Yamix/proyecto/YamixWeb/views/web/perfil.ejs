@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Perfil</title>
+    <link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="c/css/style.min.css" rel="stylesheet">
+   
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="c/lib/flaticon/font/flaticon.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        box-sizing: border-box;
+      }
+    
+      .content-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 20px;
+      }
+    
+      /* Profile Card Styles */
+      .user-card {
+        position: relative;
+        width: 550px;
+        height: 340px;
+        background: #fff;
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+        transition: 0.5s ease-in-out;
+      }
+    
+      .left-column,
+      .right-column {
+        flex: 1;
+        max-width: 48%;
+      }
+    
+      .right-column {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+    
+      .user-card .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+      }
+    
+      .user-card .button-group button {
+        padding: 10px 30px;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+        font-size: 1em;
+        font-weight: 500;
+        background: rgb(246, 3, 3);
+        color: #fff;
+        cursor: pointer;
+      }
+    </style>
+  
+</head>
+
+</div>
+<body class="bg-white">
+    <!-- Navbar Start -->
+<div class="container-fluid p-0 nav-bar">
+  <%- include('partials/topbar') %>
+</div>
+<!-- Navbar End -->
+
+
+
+  <!-- Page Header Start -->
+  <div class="container-fluid page-header mb-5">
+      <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+          <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Perfil</h4>
+          <div class="d-inline-flex">
+              <p class="m-0 text-white"><a class="text-white" href="">Home</a></p>
+              <p class="m-0 text-white px-2">/</p>
+              <p class="m-0 text-white">YAMIX</p>
+          </div>
+      </div>
+  </div>
+
+
+  <div class="content-container">
+    <!-- Left Column -->
+    <div class="left-column">
+      <% if (usuario) { %> <!-- Verificamos que el usuario existe -->
+        <div class="user-card">
+          <div class="card-content">
+            <div class="user-details">
+              <h3>Nombre: </h3>
+              <p><%= usuario.nombre %> <%= usuario.apellido %></p> <!-- Contenido dentro de un párrafo -->
+              
+              <h3>Correo: </h3>
+              <p><%= usuario.correo %></p> <!-- Contenido dentro de un párrafo -->
+              
+              <h3>Fecha de nacimiento: </h3>
+              <p><%= new Date(usuario.fecha_nacimiento).toLocaleDateString() %></p> <!-- Contenido dentro de un párrafo -->
+              
+              <h3>Rol: </h3>
+              <p><%= usuario.nombre_rol.charAt(0).toUpperCase() + usuario.nombre_rol.slice(1)%></p> <!-- Contenido dentro de un párrafo -->
+              
+              <div class="button-group">
+                <button id="editBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" 
+                        data-nombre="<%= usuario.nombre %>"
+                        data-apellido="<%= usuario.apellido %>"
+                        data-correo="<%= usuario.correo %>"
+                        data-id_usuario="<%= usuario.id_usuario %>"
+                        data-fecha_nacimiento="<%= usuario.fecha_nacimiento %>">
+                  Edit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } else { %>
+        <p>No hay usuario disponible.</p>
+      <% } %>
+    </div>
+    
+    <!-- Right Column -->
+    <div class="right-column">
+      <% if (usuario && (usuario.nombre_rol !== 'administrador' && usuario.nombre_rol !== 'profesor')) { %>
+      <!-- Mostrar Inasistencias solo si el rol no es admin -->
+      <h2>Inasistencias</h2>
+      
+      <% if (inasistencias && inasistencias.inasistencias > 0) { %>
+        <p>Inasistencias: <%= inasistencias.inasistencias %></p>
+        <a type="button" class="btn btn-primary" href="/historialAsistencia" >Ver historial</a>
+      <% } else { %>
+        <p>No hay inasistencias registradas para este estudiante.</p>
+      <% } %>
+      <% } %>
+      
+<!-- Mostrar Documentación solo si el rol no es admin -->
+<% if (usuario && usuario.nombre_rol !== 'administrador') { %>
+  <h2>Documentación</h2>
+  <% if (usuario && usuario.documentos && usuario.documentos.length > 0) { %> 
+    <!-- Verificamos si existen documentos -->
+    <ul>
+      <% usuario.documentos.forEach(function(doc) { %> 
+        <!-- Iteramos sobre los documentos -->
+        <li>
+          <a href="<%= doc.ruta_archivo %>" target="_blank">Documento</a>
+        </li>
+      <% }); %>
+    </ul>
+
+    <% if (usuario.documentos.length < 3) { %>
+      <button id="editDocsBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#docsModal" 
+              data-id_usuario="<%= usuario ? usuario.id_usuario : '' %>">
+        Agregar
+      </button>
+    <% } %>
+  
+  <% } else { %>
+    <p>No hay documentos disponibles.</p>
+    <button id="editDocsBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#docsModal" 
+            data-id_usuario="<%= usuario ? usuario.id_usuario : '' %>">
+      Agregar
+    </button>
+  <% } %>
+<% } %>
+
+
+    </div>
+  </div>
+
+<!-- Modal de Documentos -->
+<div class="modal fade" id="docsModal" tabindex="-1" aria-labelledby="docsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="docsModalLabel">Agregar Documento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Aquí puedes tener el formulario para agregar documentos -->
+        <form id="addDocumentForm">
+          <div class="mb-3">
+            <label for="documentFile" class="form-label">Seleccionar archivo</label>
+            <input type="file" class="form-control" id="documentFile" required>
+          </div>
+          <!-- Aquí puedes ocultar el id_usuario con un input hidden -->
+          <input type="hidden" id="usuarioId" name="id_usuario">
+          <button type="submit" class="btn btn-primary">Subir Documento</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+ <!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalLabel">Editar información personal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Formulario -->
+        <form id="editUserForm">
+          <!-- Nombre -->
+           <input type="text" id="id_usuario" hidden>
+          <div class="mb-3">
+            <label for="modalNombre" class="form-label"><strong>Nombre:</strong></label>
+            <input type="text" class="form-control" id="modalNombre" name="nombre" required>
+          </div>
+          <!-- Apellido -->
+          <div class="mb-3">
+            <label for="modalApellido" class="form-label"><strong>Apellido:</strong></label>
+            <input type="text" class="form-control" id="modalApellido" name="apellido" required>
+          </div>
+          <!-- Correo -->
+          <div class="mb-3">
+            <label for="modalCorreo" class="form-label"><strong>Correo:</strong></label>
+            <input type="email" class="form-control" id="modalCorreo" name="correo" required>
+          </div>
+          <!-- Fecha de nacimiento -->
+          <div class="mb-3">
+            <label for="modalFechaNacimiento" class="form-label"><strong>Fecha de nacimiento:</strong></label>
+            <input type="date" class="form-control" id="modalFechaNacimiento" name="fecha_nacimiento" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="saveChangesButton">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+ // Enviar el formulario al hacer submit
+document.getElementById('addDocumentForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevenir el envío tradicional del formulario
+
+  // Obtener el formulario y los datos
+  const form = document.getElementById('addDocumentForm');
+  const formData = new FormData(form);
+
+  // Obtener el archivo seleccionado
+  const fileInput = document.getElementById('documentFile');
+  const documento = fileInput.files[0];
+
+  // Verificar que se haya seleccionado un archivo
+  if (!documento) {
+    Swal.fire({
+      title: 'Error',
+      text: 'Por favor, selecciona un archivo.',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+    return;
+  }
+
+  // Validar que el archivo sea un PDF
+  const fileExtension = documento.name.split('.').pop().toLowerCase();
+  if (fileExtension !== 'pdf') {
+    Swal.fire({
+      title: 'Error',
+      text: 'Solo se aceptan archivos PDF.',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+    return;
+  }
+
+  // Obtener el id_usuario del campo oculto
+  const usuarioId = document.getElementById('usuarioId').value;
+
+  // Asegurarse de que el id_usuario esté presente
+  if (!usuarioId) {
+    Swal.fire({
+      title: 'Error',
+      text: 'No se ha encontrado el ID del usuario.',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+    return;
+  }
+
+  // Agregar el archivo al FormData
+  formData.append('documento', documento);
+  formData.append('id_usuario', usuarioId);
+
+  // Enviar el formulario usando fetch
+  fetch('http://35.199.176.100/api/documentoperfil', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => {
+    // Comprobar si la respuesta fue exitosa (código 200)
+    if (!response.ok) {
+      return response.json().then(data => { throw new Error(data.message || 'Error al subir el documento.'); });
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Si todo es exitoso, mostrar alerta de éxito
+    Swal.fire({
+      title: 'Éxito',
+      text: 'Documento subido correctamente.',
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    }).then(() => {
+      // Cerrar modal
+      $('#docsModal').modal('hide');
+      window.location.reload();
+    });
+  })
+  .catch(error => {
+    console.error('Error al enviar el formulario:', error);
+    Swal.fire({
+      title: 'Error',
+      text: error.message || 'Hubo un problema al comunicarse con el servidor.',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+  });
+});
+</script>
+<script>
+  // Al abrir el modal de documentos, capturamos el id_usuario
+  document.getElementById('editDocsBtn').addEventListener('click', function() {
+    const userId = this.getAttribute('data-id_usuario');
+    document.getElementById('usuarioId').value = userId; // Pasamos el id_usuario al campo oculto
+  });
+</script>
+  
+<script>
+  document.getElementById("saveChangesButton").addEventListener("click", function() {
+    const form = document.getElementById("editUserForm");
+
+    if (form.checkValidity()) {
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      // Asegúrate de que id_usuario esté presente
+      const userId = document.getElementById('id_usuario').value;
+      if (!userId) {
+        console.error("El id_usuario no está disponible.");
+        return;
+      }
+
+      // Enviar los datos a la API
+      fetch(`http://35.199.176.100/api/editar_perfil/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => {
+        return response.json().then(data => {
+          if (response.status === 401) {
+            // Mostrar alerta si el correo ya está en uso
+            Swal.fire({
+              title: 'Error',
+              text: 'El correo ya está registrado en otro usuario.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          } else if (data.message && data.message === 'Usuario actualizado correctamente') {
+            // Mostrar alerta de éxito
+            Swal.fire({
+              title: 'Éxito',
+              text: 'El perfil se ha actualizado correctamente.',
+              icon: 'success',
+              confirmButtonText: 'Aceptar'
+            }).then(() => {
+              // Recargar la página después de la alerta
+              window.location.reload();
+            });
+          } else {
+            // Mostrar alerta de error si la respuesta no es exitosa
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un problema al actualizar el perfil.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+      })
+      .catch(error => {
+        console.error("Error al actualizar:", error);
+        // Mostrar alerta de error en caso de fallo en la solicitud
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un problema al comunicarse con el servidor.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const editBtn = document.getElementById("editBtn");
+
+    // Verificamos si el botón existe antes de agregar el evento
+    if (editBtn) {
+      editBtn.addEventListener("click", function () {
+        // Obtenemos los datos del botón
+        const nombre = editBtn.getAttribute("data-nombre");
+        const apellido = editBtn.getAttribute("data-apellido");
+        const correo = editBtn.getAttribute("data-correo");
+        const id_usuario = editBtn.getAttribute("data-id_usuario");
+        const fechaNacimiento = editBtn.getAttribute("data-fecha_nacimiento");
+
+        // Asignamos los datos a los campos de la modal
+        document.getElementById("modalNombre").value = nombre;
+        document.getElementById("modalApellido").value = apellido;
+        document.getElementById("modalCorreo").value = correo;
+        document.getElementById("id_usuario").value = id_usuario;
+
+        // Convertimos la fecha de nacimiento al formato yyyy-mm-dd
+        const fecha = new Date(fechaNacimiento);
+        const fechaFormato = fecha.toISOString().split('T')[0]; // Esto convierte la fecha al formato adecuado
+        document.getElementById("modalFechaNacimiento").value = fechaFormato;
+      });
+    }
+  });
+</script>
+
+
+<!-- Class Timetable Start -->
+<div class="container gym-feature py-5">
+  <div class="d-flex flex-column text-center mb-5">
+      <h4 class="text-primary font-weight-bold">Horario de clases</h4>
+      <h4 class="display-4 font-weight-bold">Tus Clases</h4>
+  </div>
+  <div class="tab-class">
+      <ul class="nav nav-pills justify-content-center mb-4" id="courseNav">
+          <!-- Los botones de filtro por curso se generarán aquí dinámicamente -->
+      </ul>
+      <div class="tab-content">
+          <!-- Filtro por curso -->
+          <div class="text-center mb-4">
+              <button class="btn btn-primary" id="clearFilter">Mostrar todas las clases</button>
+          </div>
+          <!-- All Classes Tab -->
+          <div id="class-all" class="container tab-pane p-0 active">
+              <div class="table-responsive">
+                  <table class="table table-bordered table-lg m-0">
+                      <thead class="bg-secondary text-white text-center">
+                          <tr>
+                              <th>Horarios</th>
+                              <th>Lunes</th>
+                              <th>Martes</th>
+                              <th>Miercoles</th>
+                              <th>Jueves</th>
+                              <th>Viernes</th>
+                          </tr>
+                      </thead>
+                      <tbody class="text-center">
+                          <!-- Placeholder for dynamically added content -->
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Class Timetable End -->
+
+<script>
+let clasesGlobal = [];  // Variable para almacenar las clases
+
+async function fetchClases() {
+  const token = '<%= jwt %>'; 
+
+  if (!token) {
+    console.error('Token no encontrado');
+    return;
+  }
+
+  const decoded = JSON.parse(atob(token.split('.')[1]));
+  const id = decoded.id;
+  const rol = decoded.rol
+
+  try {
+    const response = await fetch(`http://35.199.176.100/api/claseParaEstudiante/${id}?rol=${rol}`);
+    const clases = await response.json();
+    clasesGlobal = clases;
+
+    displayClasses(clases);
+    createFilterButtons(clases);
+  } catch (error) {
+    console.error('Error al cargar las clases:', error);
+  }
+}
+
+// Crear botones de filtro por nombre de curso
+function createFilterButtons(clases) {
+  const filterButtonsDiv = document.getElementById('courseNav');
+  filterButtonsDiv.innerHTML = '';  // Limpiar los botones anteriores
+
+  const uniqueCursos = [...new Set(clases.map(clase => clase.nombre_curso))]; // Obtener nombres únicos de cursos
+
+  uniqueCursos.forEach(curso => {
+      const button = document.createElement('button');  // Cambiar de 'a' a 'button'
+      button.classList.add('btn', 'btn-primary', 'm-1');  // Agregar el estilo btn btn-primary
+      button.textContent = curso;
+      button.addEventListener('click', (event) => {
+          event.preventDefault();
+          filterByCourse(curso);
+      });
+      filterButtonsDiv.appendChild(button);
+  });
+}
+
+// Filtrar las clases por nombre de curso
+function filterByCourse(cursoName) {
+  const filteredClasses = clasesGlobal.filter(clase => clase.nombre_curso === cursoName);
+  displayClasses(filteredClasses);
+}
+
+// Mostrar todas las clases
+document.getElementById('clearFilter').addEventListener('click', () => {
+  displayClasses(clasesGlobal); // Mostrar todas las clases
+});
+
+// Función para mostrar las clases en la tabla
+function displayClasses(clases) {
+  const tableBody = document.querySelector('#class-all tbody');
+  tableBody.innerHTML = '';  // Limpiar la tabla antes de llenarla
+
+  // Días de la semana en orden (solo hasta el viernes)
+  const diasSemana = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+  clases.forEach(clase => {
+      const row = document.createElement('tr');
+
+      const timeCell = document.createElement('td');
+      timeCell.textContent = clase.time;
+
+      timeCell.style.backgroundColor = 'black';
+      timeCell.style.color = 'white';
+      timeCell.style.fontWeight = 'bold';
+      timeCell.style.textAlign = 'center';
+      row.appendChild(timeCell);
+
+      diasSemana.forEach(dia => {
+          const diaCell = document.createElement('td');
+          const cursoInstructorDiv = document.createElement('div');
+          const curso = document.createElement('div');
+          curso.textContent = clase.nombre_curso;
+          cursoInstructorDiv.appendChild(curso);
+
+          const instructor = document.createElement('div');
+          instructor.textContent = clase.nombre_usuario;
+          cursoInstructorDiv.appendChild(instructor);
+
+          diaCell.appendChild(cursoInstructorDiv);
+          row.appendChild(diaCell);
+      });
+
+      tableBody.appendChild(row);
+  });
+}
+
+// Llamar la función para cargar las clases cuando se cargue la página
+fetchClases();
+</script>
+
+
+
+
+
+<!-- Footer Start -->
+<%- include('partials/footer') %>
+  <!-- Footer End -->   

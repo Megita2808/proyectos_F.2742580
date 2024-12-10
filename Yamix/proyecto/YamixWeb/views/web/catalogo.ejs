@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Calendario</title>
+
+ <!-- Favicon -->
+ <link href="c/img/favicon.ico" rel="icon">
+
+ <!-- Font Awesome -->
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+ <!-- Flaticon Font -->
+ <link rel="stylesheet" href="c/lib/flaticon/font/flaticon.css">
+
+
+ <!-- Customized Bootstrap Stylesheet -->
+ <link href="c/css/style.min.css" rel="stylesheet">
+     <!-- Calendario scripts -->
+
+
+</head>
+
+</div>
+<body class="bg-white">
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+        <%- include('partials/topbar') %>
+    </div>
+<!-- Navbar End -->
+
+ 
+  <!-- Page Header Start -->
+  <div class="container-fluid page-header mb-5">
+      <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+          <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Catalogo   </h4>
+          <div class="d-inline-flex">
+              <p class="m-0 text-white"><a class="text-white" href="">Home</a></p>
+              <p class="m-0 text-white px-2">/</p>
+              <p class="m-0 text-white">YAMIX</p>
+          </div>
+      </div>
+  </div>
+  <!-- Page Header End -->
+
+  <div class="container pt-5 team">
+    <div class="d-flex flex-column text-center mb-5">
+
+        <h4 class="display-4 font-weight-bold">Productos recomendados</h4>
+    </div>
+
+<!-- Filtro de cursos -->
+<div class="mb-4 text-center">
+    <select id="filtroCurso" class="form-control" style="max-width: 400px; margin: auto;">
+        <option value="">Todos los cursos</option>
+        <!-- Opciones dinámicas se agregarán aquí -->
+    </select>
+</div>
+
+    <div id="productosCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+            <!-- Aquí se cargarán los productos dinámicamente -->
+        </div>
+        <a class="carousel-control-prev" href="#productosCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#productosCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+
+<style>
+/* Estilo para la imagen dentro de la card */
+.card-img-top {
+    object-fit: cover;
+    width: 100%;
+    height: 300px; /* Fija una altura uniforme para las imágenes */
+    margin-bottom: 0; /* Elimina la separación entre la imagen y el contenido */
+}
+
+/* Estilo para la tarjeta */
+.card {
+    border: none; /* Elimina el borde de la tarjeta */
+    margin-bottom: 0; /* Elimina el margen inferior de la tarjeta */
+}
+
+.card-body {
+    padding: 20px;
+    height: 215px; /* Establecer una altura fija para todas las tarjetas */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: height 0.3s ease;
+}
+
+/* Estilo para el texto corto */
+.card-text {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    max-height: 50px; /* Limita la altura visible para la descripción corta */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: max-height 0.3s ease;
+}
+
+/* Estilo para la descripción completa */
+.card-text.ver-mas {
+    max-height: none; /* Muestra todo el texto si se hace clic en "ver más" */
+}
+
+/* Estilo para cuando se expande la tarjeta */
+.card-body.expanded {
+    height: auto; /* Permite que la tarjeta se expanda */
+}
+
+/* Ocultar el texto largo hasta que se haga clic en "ver más" */
+.card-text + .ver-mas-btn {
+    cursor: pointer;
+    color: blue;
+}
+
+
+</style>
+<!-- Team End -->
+
+
+
+<script>
+  let productosOriginales = []; // Almacena los productos originales para filtrar
+
+async function obtenerCatalogo() {
+    try {
+        const response = await fetch("http://35.199.176.100/api/get-all");
+        const productos = await response.json();
+
+        if (!productos || productos.length === 0) {
+            console.warn("No se encontraron productos.");
+            return;
+        }
+
+        productosOriginales = productos; // Guardar los productos originales
+        cargarProductosEnCarrusel(productos);
+        llenarFiltroCursos(productos);
+    } catch (error) {
+        console.error("Error al cargar los productos:", error);
+    }
+}
+
+// Llenar el `<select>` con los nombres de cursos únicos
+function llenarFiltroCursos(productos) {
+    const filtro = document.getElementById("filtroCurso");
+    filtro.innerHTML = '<option value="">Todos los cursos</option>'; // Opción predeterminada
+
+    const cursosUnicos = [...new Set(productos.map(p => p.nombre_curso))]; // Obtener nombres de cursos únicos
+    cursosUnicos.forEach(curso => {
+        const option = document.createElement("option");
+        option.value = curso;
+        option.textContent = curso;
+        filtro.appendChild(option);
+    });
+}
+
+// Filtrar los productos según el curso seleccionado en el `<select>`
+function filtrarProductosPorCurso() {
+    const filtro = document.getElementById("filtroCurso").value;
+    const productosFiltrados = filtro
+        ? productosOriginales.filter(producto => producto.nombre_curso === filtro)
+        : productosOriginales;
+
+    cargarProductosEnCarrusel(productosFiltrados);
+}
+
+// Cargar productos en el carrusel
+function cargarProductosEnCarrusel(productos) {
+    const carouselInner = document.querySelector('#productosCarousel .carousel-inner');
+    carouselInner.innerHTML = ''; // Limpiar contenido previo
+
+    let slide = '';
+    let itemCount = 0;
+
+    productos.forEach((producto, index) => {
+        if (itemCount % 4 === 0) {
+            if (itemCount > 0) slide += '</div>'; // Cerrar fila previa
+            slide += `<div class="carousel-item${itemCount === 0 ? ' active' : ''}"><div class="row">`;
+        }
+
+        const maxLength = 22;
+        const descripcionCorta = producto.descripcion.slice(0, maxLength);
+        const tieneVerMas = producto.descripcion.length > maxLength;
+
+        slide += `
+            <div class="col-md-3">
+                <div class="card border-0 bg-secondary text-center text-white">
+                    <img class="card-img-top" src="${producto.imagen_producto}" alt="${producto.nombre_producto}">
+                    <div class="card-body bg-secondary">
+                        <h4 class="card-title text-primary">${producto.nombre_producto}</h4>
+                        <p class="card-text" id="desc-${producto.id_catalogo}">
+                            ${descripcionCorta}
+                        </p>
+                        <p class="card-text ${tieneVerMas ? 'ver-mas' : ''}" id="full-desc-${producto.id_catalogo}" style="display: none;">
+                            ${producto.descripcion}
+                        </p>
+                        ${tieneVerMas ? `<span class="ver-mas-btn" onclick="mostrarMasMenos(${producto.id_catalogo})">Ver más</span>` : ''}
+                        <a href="${producto.link}" class="btn btn-lg px-4 btn-outline-primary" target="_blank">Ver producto</a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        itemCount++;
+        if (itemCount % 4 === 0 || index === productos.length - 1) slide += '</div></div>';
+    });
+
+    carouselInner.innerHTML = slide; // Inyectar contenido
+}
+
+// Mostrar más/menos descripción
+function mostrarMasMenos(id) {
+    const shortDesc = document.getElementById(`desc-${id}`);
+    const fullDesc = document.getElementById(`full-desc-${id}`);
+    const verMasBtn = document.querySelector(`#desc-${id} + .ver-mas-btn`);
+
+    if (shortDesc.style.display !== 'none') {
+        shortDesc.style.display = 'none';
+        fullDesc.style.display = 'block';
+        verMasBtn.textContent = 'Ver menos';
+    } else {
+        shortDesc.style.display = 'block';
+        fullDesc.style.display = 'none';
+        verMasBtn.textContent = 'Ver más';
+    }
+}
+
+// Escuchar cambios en el `<select>` y filtrar
+document.getElementById("filtroCurso").addEventListener("change", filtrarProductosPorCurso);
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', obtenerCatalogo);
+
+    </script>
+
+<style>
+    @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: "Montserrat", sans-serif;
+        }
+        /*Cards*/
+        .container-card {
+          width: 100%;
+          display: flex;
+          max-width: 1100px;
+          margin: auto;
+        }
+        .title-cards {
+          width: 100%;
+          max-width: 1080px;
+          margin: auto;
+          padding: 20px;
+          margin-top: 20px;
+          text-align: center;
+          color: #7a7a7a;
+        }
+        .card {
+          width: 100%;
+          margin: 20px;
+          border-radius: 6px;
+          overflow: hidden;
+          background: #fff;
+          box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+          transition: all 400ms ease-out;
+          cursor: default;
+        }
+        .card:hover {
+          box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+          transform: translateY(-3%);
+        }
+        .card img {
+          width: 100%;
+          height: 210px;
+        }
+        .card .contenido-card {
+          padding: 15px;
+          text-align: center;
+        }
+        .card .contenido-card h3 {
+          margin-bottom: 15px;
+          color: #7a7a7a;
+        }
+        .card .contenido-card p {
+          line-height: 1.8;
+          color: #6a6a6a;
+          font-size: 14px;
+          margin-bottom: 5px;
+        }
+        .card .contenido-card a {
+          display: inline-block;
+          padding: 10px;
+          margin-top: 10px;
+          text-decoration: none;
+          color: #e31c25;
+          border: 1px solid #e31c25;
+          border-radius: 4px;
+          transition: all 400ms ease;
+          margin-bottom: 5px;
+        }
+        .card .contenido-card a:hover {
+          background: #e31c25;
+          color: #fff;
+        }
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+          .container-card {
+            flex-wrap: wrap;
+          }
+          .card {
+            margin: 15px;
+          }
+        }</style>
+
+
+<!-- Footer Start -->
+<%- include('partials/footer') %>
+  <!-- Footer End -->
+       <!-- JavaScript Libraries -->
+       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+       <script src="c/lib/easing/easing.min.js"></script>
+       <script src="c/lib/waypoints/waypoints.min.js"></script>
+   
+       <!-- Contact Javascript File -->
+       <script src="c/mail/jqBootstrapValidation.min.js"></script>
+       <script src="c/mail/contact.js"></script>
+   
+       <!-- Template Javascript -->
+       <script src="c/js/main.js"></script>

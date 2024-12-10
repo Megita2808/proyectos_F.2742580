@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YAMIX</title>
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <section id="sec">
+        <div class="form-box">
+            <div class="form-value">
+                <form id="restablecerForm" action="/registro" method="post" onsubmit="validarFormulario(event)">
+                    <h2>Registrarse</h2>
+                    <br>
+                    <br>
+                    <div class="inputbox">
+                        <ion-icon name="person"></ion-icon>
+                        <input name="nombre" type="text" id="nombre">
+                        <label for="">Nombres</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="person"></ion-icon>
+                        <input name="apellido" type="text" id="apellido">
+                        <label for="">Apellidos</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input name="gmail" id="correo">
+                        <label for="">Correo</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="calendar"></ion-icon>
+                        <input name="fecha_nacimiento" type="date" id="nacimiento">
+                    </div>
+                    <div class="inputbox" id="confirmarContraseñaBox">
+                        <ion-icon name="eye-off-outline" class="show-password" onclick="togglePassword('contraseña', this)"></ion-icon>
+                        <input name="contraseña" type="password" id="contraseña">
+                        <label for="confirmarContraseña">Contraseña</label>
+                    </div>
+                    <div class="inputbox" id="confirmarContraseñaBox">
+                        <input type="password" name="confirmarContraseña" id="confirmarContraseña">
+                        <label for="confirmarContraseña">Confirmar Contraseña</label>
+                        <ion-icon name="eye-off-outline" class="show-password" onclick="togglePassword('confirmarContraseña', this)"></ion-icon>
+                    </div>
+                    <br>
+                    <!-- Google reCAPTCHA -->
+                    <div class="g-recaptcha" data-sitekey="6Le2640qAAAAAOck_dTlrMgxvOAmMhFve0-OksUT"></div>
+                    <br>
+                    <button type="submit">Registrar</button>
+                    <div class="register">
+                        <p>¿Ya tienes cuenta? <a href="/login">Iniciar Sesión</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- SweetAlert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+
+    <script>
+        async function validarFormulario(event) {
+            event.preventDefault();
+            console.log("Procesando formulario...");
+    
+            // Obtener la respuesta de reCAPTCHA
+            const captchaResponse = grecaptcha.getResponse();
+    
+            if (!captchaResponse) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Por favor, verifica que no eres un robot."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                return;
+            }
+    
+            // Verificar el captcha en el servidor
+            try {
+                const captchaResponseData = await fetch('http://35.199.176.100/api/verify-captcha', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ captchaResponse })
+                });
+    
+                const verificationResult = await captchaResponseData.json();
+                console.log("Resultado de verificación de reCAPTCHA:", verificationResult);
+    
+                if (!verificationResult.success) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "Verificación de reCAPTCHA fallida."
+                    });
+                    grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                    return;
+                }
+            } catch (error) {
+                console.error("Error al verificar reCAPTCHA:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Hubo un error al verificar reCAPTCHA."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                return;
+            }
+    
+            // Validaciones de campos
+            const form = document.getElementById('restablecerForm');
+            const nombre = form.nombre.value.trim();
+            const apellido = form.apellido.value.trim();
+            const correo = form.correo.value.trim();
+            const contraseña = form.contraseña.value;
+            const confirmarContraseña = form.confirmarContraseña.value;
+            const fechaNacimiento = form.nacimiento.value;
+    
+            if (!nombre || !apellido || !correo || !contraseña || !confirmarContraseña || !fechaNacimiento) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Todos los campos son obligatorios."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                return;
+            }
+    
+            if (contraseña !== confirmarContraseña) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Las contraseñas no coinciden."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                return;
+            }
+    
+            const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+            if (!passwordRegex.test(contraseña)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "La contraseña debe tener al menos 6 caracteres, incluyendo letras, números y caracteres especiales."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                return;
+            }
+    
+            const edad = calcularEdad(fechaNacimiento);
+            if (edad < 8 || edad > 65) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "La edad debe estar entre 8 y 65 años."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                return;
+            }
+    
+            // Enviar datos al backend para registro
+            try {
+                const formData = {
+                    nombre,
+                    apellido,
+                    correo,
+                    contraseña,
+                    fecha_nacimiento: fechaNacimiento,
+                    captchaResponse
+                };
+    
+                const registroResponse = await fetch('http://35.199.176.100/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+    
+                const registroResult = await registroResponse.json();
+                console.log("Resultado de registro:", registroResult);
+    
+                if (registroResponse.ok) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Registro exitoso",
+                        text: "Tu cuenta ha sido creada. Recuerda adjuntar tu documentacion para ser aprobado."
+                    }).then(() => {
+                        window.location.href = '/login';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: registroResult.message || "Hubo un error al registrar."
+                    });
+                    grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+                }
+            } catch (error) {
+                console.error("Error al registrar usuario:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Hubo un error al procesar tu solicitud."
+                });
+                grecaptcha.reset(); // Reiniciar reCAPTCHA inmediatamente
+            }
+        }
+    
+        function calcularEdad(fechaNacimiento) {
+            const fecha = new Date(fechaNacimiento);
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - fecha.getFullYear();
+            const mes = hoy.getMonth() - fecha.getMonth();
+            if (mes < 0 || (mes === 0 && hoy.getDate() < fecha.getDate())) {
+                edad--;
+            }
+            return edad;
+        }
+    
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.name = "eye-outline";
+            } else {
+                input.type = "password";
+                icon.name = "eye-off-outline";
+            }
+        }
+    </script>
+    
+</body>
+</html>

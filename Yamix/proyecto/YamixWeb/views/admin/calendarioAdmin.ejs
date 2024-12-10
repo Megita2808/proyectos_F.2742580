@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Calendario</title>
+    <link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+</div>
+
+<body>
+    <%- include('partials/head') %>
+        <div class="d-flex">
+            <!-- Sidebar -->
+            <%- include('partials/sidebar') %>
+
+                <!-- Main Content -->
+                <div class="main-content flex-grow-1">
+
+                    <div class="container mt-5">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Modales -->
+        <div id="modalNuevoEvento"></div>
+        <div id="actualizarEvento"></div>
+
+        <%- include('partials/scripts') %>
+</body>
+
+
+<!-- Modales -->
+<div id="modalNuevoEvento"></div>
+<div id="actualizarEvento"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/p/js/popper.min.js"></script>
+<script src="/p/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/p/js/moment.min.js"></script>
+<script type="text/javascript" src="/p/js/fullcalendar.min.js"></script>
+<script src='/p/js/locales/es.js'></script>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registrar Nuevo Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="formEvento" id="formEvento" action="http://35.199.176.100/api/agregar_evento"
+                class="form-horizontal" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre_evento" class="col-sm-12 control-label">Nombre del Evento</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="nombre_evento" id="nombre_evento"
+                                placeholder="Nombre del Evento" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion" class="col-sm-12 control-label">Descripción</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" name="descripcion" id="descripcion"
+                                placeholder="Descripción del Evento" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ubicacion" class="col-sm-12 control-label">Ubicación</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="ubicacion" id="ubicacion"
+                                placeholder="Ubicación del Evento" required>
+                        </div>
+                    </div>
+
+                    <div class="mapouter">
+                        <div class="gmap_canvas">
+                            <iframe
+                                src="https://maps.google.com/maps?q=copacabana&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
+                                frameborder="0" scrolling="yes" style="width: 380px; height: 200px;">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_inicio" class="col-sm-12 control-label">Fecha Inicio</label>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" class="form-control" name="fecha_inicio" id="fecha_inicio"
+                                placeholder="Fecha Inicio" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_fin" class="col-sm-12 control-label">Fecha Final</label>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" class="form-control" name="fecha_fin" id="fecha_fin"
+                                placeholder="Fecha Final" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_curso" class="col-sm-12 control-label">Cursos</label>
+                        <div class="col-sm-10">
+                            <select name="id_curso" class="form-control" id="id_curso" required>
+                                <option value="" disabled selected>Seleccione un curso</option>
+                                <% cursoss.forEach(curso=> { %>
+                                    <option value="<%= curso.id_curso %>">
+                                        <%= curso.nombre_curso %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+                    <label for="color_evento" class="col-sm-12 control-label">Color del Evento</label>
+                    <div class="col-md-12">
+                        <input type="radio" name="color_evento" id="orange" value="#FF5722" checked>
+                        <label for="orange" class="circu" style="background-color: #FF5722;"> </label>
+
+                        <input type="radio" name="color_evento" id="amber" value="#FFC107">
+                        <label for="amber" class="circu" style="background-color: #FFC107;"> </label>
+
+                        <input type="radio" name="color_evento" id="lime" value="#8BC34A">
+                        <label for="lime" class="circu" style="background-color: #8BC34A;"> </label>
+
+                        <input type="radio" name="color_evento" id="teal" value="#009688">
+                        <label for="teal" class="circu" style="background-color: #009688;"> </label>
+
+                        <input type="radio" name="color_evento" id="blue" value="#2196F3">
+                        <label for="blue" class="circu" style="background-color: #2196F3;"> </label>
+
+                        <input type="radio" name="color_evento" id="indigo" value="#9c27b0">
+                        <label for="indigo" class="circu" style="background-color: #9c27b0;"> </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Guardar Evento</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para actualizar evento -->
+<div class="modal fade" id="modalUpdateEvento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formUpdateEvento" action="http://35.199.176.100/api/actualizar_evento" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" id="idEventoUpdate" name="id" value="">
+
+                    <div class="form-group">
+                        <label for="nombre_eventoUpdate" class="col-sm-12 control-label">Nombre del Evento</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="nombre_eventoUpdate" name="nombre_evento" placeholder="Nombre del Evento">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcionUpdate" class="col-sm-12 control-label">Descripción</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="descripcionUpdate" name="descripcion" placeholder="Descripción del Evento" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ubicacionUpdate" class="col-sm-12 control-label">Ubicación</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="ubicacionUpdate" name="ubicacion" placeholder="Ubicación del Evento">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_inicioUpdate" class="col-sm-12 control-label">Fecha de Inicio</label>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" class="form-control" id="fecha_inicioUpdate" name="fecha_hora_inicio">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_finUpdate" class="col-sm-12 control-label">Fecha de Fin</label>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" class="form-control" id="fecha_finUpdate" name="fecha_hora_final">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="claseUpdate" class="col-sm-12 control-label">Curso</label>
+                        <div class="col-sm-10">
+                            <select name="id_curso" class="form-control" id="id_cursoUpdate" required>
+                                <% cursos.forEach(curso => { %>
+                                    <option value="<%= curso.id_curso %>" ><%= curso.nombre_curso %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estadoUpdate" class="col-sm-12 control-label">Estado</label>
+                        <div class="col-sm-10">
+                            <select name="estado" class="form-control" id="estadoUpdate" required>
+                                <option value="" disabled selected>Seleccione el estado</option>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                  
+
+                    <div class="form-group">
+                        <label for="color_eventoUpdate" class="col-sm-12 control-label">Color del Evento</label>
+                        <div class="col-md-12">
+                            <input type="radio" name="color_evento" id="orangeUpdate" value="#FF5722">
+                            <label for="orangeUpdate" class="circu" style="background-color: #FF5722;"></label>
+
+                            <input type="radio" name="color_evento" id="amberUpdate" value="#FFC107">
+                            <label for="amberUpdate" class="circu" style="background-color: #FFC107;"></label>
+
+                            <input type="radio" name="color_evento" id="limeUpdate" value="#8BC34A">
+                            <label for="limeUpdate" class="circu" style="background-color: #8BC34A;"></label>
+
+                            <input type="radio" name="color_evento" id="tealUpdate" value="#009688">
+                            <label for="tealUpdate" class="circu" style="background-color: #009688;"></label>
+
+                            <input type="radio" name="color_evento" id="blueUpdate" value="#2196F3">
+                            <label for="blueUpdate" class="circu" style="background-color: #2196F3;"></label>
+
+                            <input type="radio" name="color_evento" id="indigoUpdate" value="#9c27b0">
+                            <label for="indigoUpdate" class="circu" style="background-color: #9c27b0;"></label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Actualizar Evento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function openModalUpdateEvento(evento) {
+        document.getElementById('idEventoUpdate').value = evento.id_evento;
+        document.getElementById('nombre_eventoUpdate').value = evento.nombre_evento;
+        document.getElementById('descripcionUpdate').value = evento.descripcion;
+        document.getElementById('ubicacionUpdate').value = evento.ubicacion;
+        document.getElementById('fecha_inicioUpdate').value = evento.fecha_hora_inicio;
+        document.getElementById('fecha_finUpdate').value = evento.fecha_hora_final;
+        document.getElementById('id_cursoUpdate').value = evento.id_curso; 
+        document.getElementById('estadoUpdate').value = evento.estado;
+       
+      
+        
+    }
+
+  
+  
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+ 
+        let isDeleting = false;
+
+       
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            locale: 'es',
+        initialView: 'dayGridMonth',
+        navLinks: true,
+        editable: true,
+        selectable: true, 
+        eventDisplay: 'block', 
+        dayMaxEvents: 4, 
+        dayMaxEventRows: true, 
+        height: 'auto',
+
+
+            // Cargar eventos desde la API
+            events: function (start, end, timezone, callback) {
+                $.ajax({
+                    url: 'http://35.199.176.100/api/traer_eventos',
+                    dataType: 'json',
+                    success: function (data) {
+                        var events = data.map(function (event) {
+                            return {
+                                _id: event.id_evento,
+                                title: event.nombre_evento,
+                                start: event.fecha_hora_inicio ? moment(event.fecha_hora_inicio).format('YYYY-MM-DDTHH:mm') : '',
+                                end: event.fecha_hora_final ? moment(event.fecha_hora_final).format('YYYY-MM-DDTHH:mm') : '',
+                                color: event.color_evento || '#378006',
+                                descripcion: event.descripcion,
+
+                                ubicacion: event.ubicacion,
+                              
+                                id_curso: event.id_curso,
+                                estado: event.estado 
+                            };
+                        });
+                        callback(events);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error al obtener eventos:', textStatus, errorThrown);
+                        Swal.fire('Error', 'No se pudieron cargar los eventos', 'error');
+                    }
+                });
+            },
+
+            select: function (start, end) {
+             
+                $('#modalNuevoEvento').load('/modalNuevoEvento', function () {
+                    $('#exampleModal').modal('show');
+
+                    var fechaInicio = start.format('YYYY-MM-DD HH:mm');
+                    var fechaFin = end.format('YYYY-MM-DD HH:mm');
+
+              
+                    $("input[name='fecha_inicio']").val(fechaInicio);
+                    $("input[name='fecha_fin']").val(fechaFin);
+
+                 
+                  
+                });
+            },
+
+       
+            eventRender: function (event, element) {
+                element.find(".fc-content").prepend("<span class='closeon material-icons'>&#xe5cd;</span>");
+                element.find(".closeon").on("click", function () {
+                    $('#actualizarEvento').modal('hide');
+                    isDeleting = true; 
+
+                    Swal.fire({
+                        title: '¿Deseas borrar este evento?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, borrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        isDeleting = false; 
+                        if (result.isConfirmed) {
+                            $('#calendar').fullCalendar("removeEvents", event._id);
+                            $.ajax({
+                                type: 'DELETE',
+                                url: 'http://35.199.176.100/api/eliminar_evento/' + event._id,
+                                success: function () {
+                                    Swal.fire('Eliminado', 'El evento fue borrado correctamente.', 'success');
+                                },
+                                error: function () {
+                                    Swal.fire('Error', 'Error al eliminar el evento', 'error');
+                                }
+                            });
+                        }
+                    });
+                });
+            },
+ 
+            eventDrop: function (event) {
+                var idEvento = event._id; 
+                var start = event.start ? event.start.format('YYYY-MM-DD HH:mm:ss') : '';
+                var end = event.end ? event.end.format('YYYY-MM-DD HH:mm:ss') : start;
+                var fechaActual = moment().format('YYYY-MM-DD HH:mm:ss');
+
+                // Validaciones de fechas
+                if (start < fechaActual) {
+                    Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
+                    $('#calendar').fullCalendar('refetchEvents'); 
+                    return; 
+                }
+
+                if (end < start) {
+                    Swal.fire('Error', 'La fecha de finalización no puede ser anterior a la fecha de inicio.', 'error');
+                    $('#calendar').fullCalendar('refetchEvents'); 
+                    return; 
+                }
+
+              
+                $.ajax({
+                    url: `http://35.199.176.100/api/actualizar_evento/${idEvento}`, 
+                    type: 'POST',
+                    data: {
+                        fecha_hora_inicio: start,  
+                        fecha_hora_final: end,      
+                        id_curso: event.id_curso,  
+                        nombre_evento: event.title,
+                        descripcion: event.description, 
+
+                        ubicacion: event.location, 
+                        color_evento: event.color, 
+           
+                        estado: event.estado 
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire('Actualizado', 'El evento fue actualizado correctamente.', 'success');
+                            $('#calendar').fullCalendar('refetchEvents');
+                        } else {
+
+                            Swal.fire('Error', response.message, 'error');
+                            $('#calendar').fullCalendar('refetchEvents');
+                        }
+                    },
+                    error: function (xhr) {
+
+                        Swal.fire('Error', 'Error al actualizar el evento: El curso ya tiene un evento programado en este rango de fechas ', 'error');
+                        $('#calendar').fullCalendar('refetchEvents');
+                    }
+                });
+            },
+
+
+
+
+            eventClick: function (event) {
+    if (isDeleting) {
+        return;
+    }
+
+    $('#idEventoUpdate').val(event._id || '');
+    $('#nombre_eventoUpdate').val(event.title || '');
+    $('#descripcionUpdate').val(event.descripcion || '');
+    $('#ubicacionUpdate').val(event.ubicacion || '');
+
+    var fechaInicio = event.start ? moment(event.start).format('YYYY-MM-DD HH:mm') : '';
+    var fechaFin = event.end ? moment(event.end).format('YYYY-MM-DD HH:mm') : '';
+
+
+    $('#fecha_inicioUpdate').val(fechaInicio);
+    $('#fecha_finUpdate').val(fechaFin);
+
+  
+    $('#estadoUpdate').val(event.estado || ''); 
+
+    $('#id_cursoUpdate').val(event.id_curso || '');
+
+  
+
+    $('body').append($('#modalUpdateEvento').clone()); 
+    $('#modalUpdateEvento').modal('show');
+}
+
+        });
+
+        // Manejo del formulario de creación de eventos
+        $(document).on('submit', '#formEvento', function (event) {
+            event.preventDefault();
+
+            var fechaInicio = $("input[name=fecha_inicio]").val();
+            var fechaFin = $("input[name=fecha_fin]").val();
+            var fechaActual = moment().format('YYYY-MM-DD HH:mm');
+
+            // Comparar las fechas convertidas a formato momento
+            if (moment(fechaInicio, 'YYYY-MM-DD HH:mm').isBefore(moment(fechaActual))) {
+                Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
+                return;
+            }
+
+            if (moment(fechaFin, 'YYYY-MM-DD HH:mm').isBefore(moment(fechaInicio))) {
+                Swal.fire('Error', 'La fecha de finalización no puede ser anterior a la fecha de inicio.', 'error');
+                return;
+            }
+
+            // Continuar con la solicitud AJAX
+            $.ajax({
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.message && response.message === 'Evento agregado exitosamente') {
+                        $('#exampleModal').modal('hide');
+                        $('#calendar').fullCalendar('refetchEvents');
+                        Swal.fire('Registrado', 'El evento fue registrado correctamente.', 'success');
+                    } else {
+                        Swal.fire('Error', 'No se pudo registrar el evento, por favor intente nuevamente.', 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Verifica el código de estado y muestra el mensaje correspondiente
+                    if (xhr.status === 400) {
+                        // Si el error es 400, muestra el mensaje de solapamiento de eventos
+                        Swal.fire('Error', 'Ya existe un evento para este curso en el rango de fechas seleccionado.', 'error');
+                    } else {
+                        // Si el error es otro, muestra un mensaje genérico
+                        Swal.fire('Error', 'Hubo un error al procesar la solicitud. Por favor, intente nuevamente.', 'error');
+                    }
+                }
+            });
+        });
+
+
+
+        $(document).on('submit', '#formUpdateEvento', function (event) {
+            event.preventDefault();
+
+            var fechaInicio = $("input[name=fecha_inicio]").val();
+            var fechaFin = $("input[name=fecha_fin]").val();
+            var fechaActual = moment().format('YYYY-MM-DD HH:mm'); // Cambia el formato aquí
+
+            // Usa moment para comparar las fechas
+            if (moment(fechaInicio, 'YYYY-MM-DD HH:mm').isBefore(moment(fechaActual))) {
+                Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
+                return; // Detener la acción si la fecha de inicio es inválida
+            }
+
+            if (moment(fechaFin, 'YYYY-MM-DD HH:mm').isBefore(moment(fechaInicio))) {
+                Swal.fire('Error', 'La fecha de finalización no puede ser anterior a la fecha de inicio.', 'error');
+                return; // Detener la acción si la fecha de fin es inválida
+            }
+
+            $.ajax({
+                type: $(this).attr('method'),
+                url: $(this).attr('action') + '/' + $('#idEventoUpdate').val(),
+                data: $(this).serialize(),
+                success: function (response) {
+                    // Cerrar el modal
+                    $('#modalUpdateEvento').modal('hide');
+
+                    // Recargar el calendario para reflejar los cambios
+                    $('#calendar').fullCalendar('refetchEvents');
+
+                    // Mostrar mensaje de éxito
+                    Swal.fire('Actualizado', 'El evento fue actualizado correctamente.', 'success');
+                },
+                error: function () {
+                    // Manejo de errores
+                    Swal.fire('Error', 'ya existe un evento para este curso en el rango de fechas seleccionado', 'error');
+                }
+            });
+        });
+    });
+
+
+</script>
+
+
+
+<style>
+    .fc .fc-button-group .fc-button.fc-state-active {
+        color: #000000;
+    }
+
+    .fc .fc-button-group .fc-button {
+        background-color: #000000;
+        margin: 0;
+    }
+
+    .fc button {
+        height: auto;
+        background-image: none;
+        text-shadow: none;
+        font-weight: normal;
+        background-color: #000000;
+        border-color: #2c2e33;
+        text-transform: capitalize;
+        color: #ffffff;
+    }
+
+    .fc-unthemed td.fc-today {
+        background: #333333;
+    }
+    .fc-event {
+    font-size: 12px;
+    padding: 2px 4px;
+    line-height: 1.2;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.fc-day {
+    height: auto;
+    overflow-y: hidden;
+}
+
+    .fc-daygrid-event {
+        font-size: 12px;
+        /* Texto más pequeño */
+        padding: 2px 4px;
+        /* Reducir padding */
+        line-height: 1.2;
+        /* Reducir espacio entre líneas */
+    }
+
+    .fc-daygrid-day-frame {
+        height: auto;
+        /* Asegurar que las celdas crezcan automáticamente */
+        overflow: hidden;
+        /* Ocultar contenido que exceda el espacio */
+    }
+</style>
+
+
+</body>
+
+</html>

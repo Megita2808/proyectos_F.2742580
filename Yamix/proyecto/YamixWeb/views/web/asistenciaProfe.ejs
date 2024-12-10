@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Asistencia</title>
+
+ <!-- Favicon -->
+ <link href="c/img/favicon.ico" rel="icon">
+
+ <!-- Font Awesome -->
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+ <!-- Flaticon Font -->
+ <link rel="stylesheet" href="c/lib/flaticon/font/flaticon.css">
+
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- Customized Bootstrap Stylesheet -->
+ <link href="c/css/style.min.css" rel="stylesheet">
+     <!-- Calendario scripts -->
+
+
+</head>
+
+</div>
+<body class="bg-white">
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+      <%- include('partials/topbar') %>
+  </div>
+<!-- Navbar End -->
+
+ 
+  <!-- Page Header Start -->
+  <div class="container-fluid page-header mb-5">
+      <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+          <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Asistencia</h4>
+          <div class="d-inline-flex">
+              <p class="m-0 text-white"><a class="text-white" href="">Home</a></p>
+              <p class="m-0 text-white px-2">/</p>
+              <p class="m-0 text-white">YAMIX</p>
+          </div>
+      </div>
+  </div>
+  <!-- Page Header End -->
+
+  <div class="d-flex flex-column text-center mb-5">
+
+    <h4 class="display-4 font-weight-bold">Control de asistencia</h4>
+  </div>
+
+
+  <div class="filters-container mb-4 text-center">
+    <!-- Filtro de asistencia -->
+    <div class="filter-item" style="margin-right: 20px;">
+      <select id="filtroAsistencia" class="form-control" style="max-width: 400px;">
+        <option value="">Filtro asistencia</option>
+        <!-- Opciones dinámicas se agregarán aquí -->
+      </select>
+    </div>
+  
+    <!-- Filtro por mes -->
+    <div class="filter-item">
+      <label for="monthFilter">Filtrar por mes:</label>
+      <select id="monthFilter">
+        <option value="">Todos</option>
+        <option value="Enero">Enero</option>
+        <option value="Febrero">Febrero</option>
+        <option value="Marzo">Marzo</option>
+        <option value="Abril">Abril</option>
+        <option value="Mayo">Mayo</option>
+        <option value="Junio">Junio</option>
+        <option value="Julio">Julio</option>
+        <option value="Agosto">Agosto</option>
+        <option value="Septiembre">Septiembre</option>
+        <option value="Octubre">Octubre</option>
+        <option value="Noviembre">Noviembre</option>
+        <option value="Diciembre">Diciembre</option>
+      </select>
+    </div>
+  </div>
+  
+  <style>
+    .filters-container {
+      display: flex;
+      justify-content: center; 
+      align-items: center; /
+    }
+    .filter-item {
+      margin-right: 20px; 
+    }
+    .filter-item:last-child {
+      margin-right: 0;
+    }
+  </style>
+  
+  
+  <!-- Agregar asistencia -->
+  <div class="mb-4 text-center">
+    <button class="btn btn-primary" id="agregarAsistenciaBtn" data-bs-toggle="modal" data-bs-target="#modalAsistencia">Agregar Asistencia</button>
+  </div>
+
+  <div class="grid" id="asistenciasGrid">
+    <% if (dataAsistencias.length === 0) { %>
+      <p>No se encontraron asistencias para mostrar.</p>
+  <% } else { %>
+    <% dataAsistencias.forEach(asistencia => { %>
+      <div class="card">
+        <span class="icon">
+          <!-- Icono de la tarjeta -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.5 9.5V5.5C4.5 4.94772 4.94772 4.5 5.5 4.5H9.5C10.0523 4.5 10.5 4.94772 10.5 5.5V9.5C10.5 10.0523 10.0523 10.5 9.5 10.5H5.5C4.94772 10.5 4.5 10.0523 4.5 9.5Z"></path>
+            <path d="M13.5 18.5V14.5C13.5 13.9477 13.9477 13.5 14.5 13.5H18.5C19.0523 13.5 19.5 13.9477 19.5 14.5V18.5C19.5 19.0523 19.0523 19.5 18.5 19.5H14.5C13.9477 19.5 13.5 19.0523 13.5 18.5Z"></path>
+            <path d="M4.5 19.5L7.5 13.5L10.5 19.5H4.5Z"></path>
+            <path d="M16.5 4.5C18.1569 4.5 19.5 5.84315 19.5 7.5C19.5 9.15685 18.1569 10.5 16.5 10.5C14.8431 10.5 13.5 9.15685 13.5 7.5C13.5 5.84315 14.8431 4.5 16.5 4.5Z"></path>
+          </svg>
+        </span>
+        <h4><%= asistencia.nombre_curso %></h4>
+        <p>
+          <strong>Fecha asistencia: </strong> <% 
+          const fechaAsistencia = new Date(asistencia.fecha_asistencia);
+          const dia = fechaAsistencia.getDate();
+          const mes = fechaAsistencia.toLocaleString('es-ES', { month: 'long' }).charAt(0).toUpperCase() + fechaAsistencia.toLocaleString('es-ES', { month: 'long' }).slice(1);
+          const año = fechaAsistencia.getFullYear();
+          const fechaFinal = `${dia} de ${mes} del ${año}`;
+          %>
+          <%= fechaFinal %><br />
+          <strong>Hora de inicio: </strong><% 
+          const horaInicio = new Date(`1970-01-01T${asistencia.hora_inicio}`);
+          let horaInicioFormatted = horaInicio.getHours();
+          let minutosInicio = horaInicio.getMinutes();
+          const ampmInicio = horaInicioFormatted >= 12 ? 'p.m.' : 'a.m.';
+          horaInicioFormatted = horaInicioFormatted % 12 || 12;
+          minutosInicio = minutosInicio < 10 ? '0' + minutosInicio : minutosInicio;
+          const horaInicioFinal = `${horaInicioFormatted}:${minutosInicio} ${ampmInicio}`;
+          %>
+          <%= horaInicioFinal %><br />
+          <strong>Hora final: </strong><% 
+          const horaFinal = new Date(`1970-01-01T${asistencia.hora_final}`);
+          let horaFinalFormatted = horaFinal.getHours();
+          let minutosFinal = horaFinal.getMinutes();
+          const ampmFinal = horaFinalFormatted >= 12 ? 'p.m.' : 'a.m.';
+          horaFinalFormatted = horaFinalFormatted % 12 || 12;
+          minutosFinal = minutosFinal < 10 ? '0' + minutosFinal : minutosFinal;
+          const horaFinalFormattedFinal = `${horaFinalFormatted}:${minutosFinal} ${ampmFinal}`;
+          %>
+          <%= horaFinalFormattedFinal %><br />
+          <strong>Instructor: </strong><%= asistencia.nombre_instructor %>
+        </p>
+        <div class="shine"></div>
+        <div class="background">
+          <!-- Elementos de fondo -->
+        </div>
+        <div class="card-buttons">
+          <button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#viewModal"
+                  data-id_asistencia="<%= asistencia.id_asistencia %>"
+                  data-nombre_curso="<%= asistencia.nombre_curso %>"
+                  data-fecha_asistencia="<%= asistencia.fecha_asistencia %>"
+                  data-fecha_asistencia_final="<%= fechaFinal %>"
+                  data-hora_inicio="<%= horaInicioFinal %>"
+                  data-hora_final="<%= horaFinalFormattedFinal %>"
+                  data-nombre_instructor="<%= asistencia.nombre_instructor %>">
+            Ver Detalle
+          </button>
+        </div>
+      </div>
+    <% }) %>
+    <% } %>
+  </div>
+
+  <% if (dataAsistencias.length > 0) { %>
+    <div id="pagination" class="text-center mt-4">
+      <button id="prevPage" class="btn btn-outline-primary">Anterior</button>
+      <span id="pageNumber" class="mx-3"></span>
+      <button id="nextPage" class="btn btn-outline-primary">Siguiente</button>
+    </div>
+  <% } %>
+<!-- Modal Ver Detalle -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalLabel">Detalles de la asistencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Nombre de la clase y fecha -->
+        <p>
+          <strong>
+            <span id="modalNombreCurso"></span> - 
+            <span id="modalFechaAsistencia"></span>
+            <button type="button" class="btn btn-link" id="editFechaBtn">
+              <i class="fa fa-pencil-alt"></i>
+            </button>
+          </strong>
+        </p>
+        <!-- Horarios -->
+        <p><strong>Horario:</strong> <span id="modalHoraInicio"></span> a <span id="modalHoraFinal"></span></p>
+        <!-- Instructor -->
+        <p><strong>Instructor:</strong> <span id="modalNombreInstructor"></span></p>
+        <!-- Estudiantes -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <h6>Estudiantes Presentes</h6>
+            <ul id="presentStudentsContainer"></ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Estudiantes Ausentes</h6>
+            <ul id="absentStudentsContainer"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" id="editButton">Editar Asistencia</button>
+        <button type="button" class="btn btn-primary" id="saveChangesButton" style="display: none;">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const itemsPerPage = 10;  // Número de elementos por página
+  const grid = document.getElementById('asistenciasGrid');
+  const cards = Array.from(grid.getElementsByClassName('card')); 
+  const prevPageBtn = document.getElementById('prevPage');
+  const nextPageBtn = document.getElementById('nextPage');
+  const pageNumberDisplay = document.getElementById('pageNumber');
+  let currentPage = 1;
+  const totalPages = Math.ceil(cards.length / itemsPerPage);
+
+
+  function updatePage() {
+ 
+    cards.forEach((card, index) => {
+      if (index >= (currentPage - 1) * itemsPerPage && index < currentPage * itemsPerPage) {
+        card.style.display = 'block'; 
+      } else {
+        card.style.display = 'none'; 
+      }
+    });
+
+    pageNumberDisplay.textContent = `Página ${currentPage}`;
+
+
+    prevPageBtn.disabled = currentPage === 1;
+    nextPageBtn.disabled = currentPage === totalPages;
+  }
+
+
+  prevPageBtn.addEventListener('click', function () {
+    if (currentPage > 1) {
+      currentPage--;
+      updatePage();
+    }
+  });
+
+
+  nextPageBtn.addEventListener('click', function () {
+    if (currentPage < totalPages) {
+      currentPage++;
+      updatePage();
+    }
+  });
+
+
+  updatePage();
+});
+
+  document.addEventListener("DOMContentLoaded", () => {
+  const monthFilter = document.getElementById("monthFilter");
+  const resetFilter = document.getElementById("resetFilter");
+  const cards = document.querySelectorAll(".card");
+
+  // Evento para filtrar tarjetas por mes
+  monthFilter.addEventListener("change", () => {
+    const selectedMonth = monthFilter.value;
+
+    cards.forEach(card => {
+      const cardText = card.querySelector("p").innerText; // Obtener el texto de la tarjeta
+      const monthMatch = cardText.match(/de\s(\w+)\sdel/); // Extraer el mes del texto
+      
+      if (monthMatch) {
+        const cardMonth = monthMatch[1]; // Obtener el mes de la tarjeta
+        if (selectedMonth === "" || cardMonth === selectedMonth) {
+          card.style.display = "block"; // Mostrar tarjeta si coincide el mes
+        } else {
+          card.style.display = "none"; // Ocultar tarjeta si no coincide el mes
+        }
+      }
+    });
+  });
+
+  // Evento para reiniciar el filtro
+  resetFilter.addEventListener("click", () => {
+    monthFilter.value = ""; // Reiniciar el select
+    cards.forEach(card => card.style.display = "block"); // Mostrar todas las tarjetas
+  });
+});
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const viewButtons = document.querySelectorAll(".btn-view");
+    let idAsistencia;
+
+    viewButtons.forEach((button) => {
+      button.addEventListener("click", async function () {
+        idAsistencia = this.dataset.id_asistencia;
+        const nombreCurso = this.dataset.nombre_curso;
+        const fechaAsistenciaFormateada = formatDate(this.dataset.fecha_asistencia);
+        const horaInicio = this.dataset.hora_inicio;
+        const horaFinal = this.dataset.hora_final;
+        const nombreInstructor = this.dataset.nombre_instructor;
+
+        // Asignar valores al modal
+        document.getElementById("modalNombreCurso").textContent = nombreCurso;
+        document.getElementById("modalFechaAsistencia").textContent = fechaAsistenciaFormateada;
+        document.getElementById("modalHoraInicio").textContent = horaInicio;
+        document.getElementById("modalHoraFinal").textContent = horaFinal;
+        document.getElementById("modalNombreInstructor").textContent = nombreInstructor;
+
+        // Cargar estudiantes
+        try {
+          const response = await fetch(`http://35.199.176.100/api/estudiantesPorAsistencia/${idAsistencia}`);
+          if (!response.ok) throw new Error("Error al cargar estudiantes");
+
+          const data = await response.json();
+          const presentContainer = document.getElementById("presentStudentsContainer");
+          const absentContainer = document.getElementById("absentStudentsContainer");
+
+          // Limpiar los contenedores antes de llenarlos
+          presentContainer.innerHTML = "";
+          absentContainer.innerHTML = "";
+
+          // Procesar estudiantes y mostrarlos sin checkboxes
+          data.estudiantes.forEach((est) => {
+            const listItem = `
+              <li class="student-item" data-id="${est.id_usuario}">
+                <div class="student-info">
+                  <span>${est.nombre} ${est.apellido}</span>
+                </div>
+              </li>
+            `;
+
+            if (est.presente === 1) {
+              presentContainer.innerHTML += listItem;
+            } else {
+              absentContainer.innerHTML += listItem;
+            }
+          });
+
+         // Almacenar los datos de estudiantes para usarlos cuando se edite la asistencia
+         window.estudiantes = data.estudiantes; // Guardar los estudiantes en un objeto global o en un lugar accesible
+            } catch (error) {
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Error al cargar los estudiantes.",
+                });
+            }
+        });
+    });
+
+    // Función para activar o desactivar el modo de edición
+    function toggleEditMode(editMode) {
+      // Verificar si estudiantes están disponibles
+      if (!window.estudiantes || window.estudiantes.length === 0) {
+        console.error('No hay estudiantes disponibles.');
+        return;
+      }
+
+      const studentItems = document.querySelectorAll(".student-item");
+
+      studentItems.forEach((item) => {
+        const studentId = item.dataset.id;
+
+        // Buscar al estudiante correspondiente en los datos de estudiantes
+        const estudiante = window.estudiantes.find(est => est.id_usuario === parseInt(studentId));
+
+        if (!estudiante) {
+          console.error(`Estudiante con id ${studentId} no encontrado.`);
+          return;
+        }
+
+        if (editMode) {
+          // Crear el checkbox con su estado dependiendo de la propiedad "presente"
+          const checkbox = `
+            <div class="form-check" style="margin: 0; padding: 0;">
+              <input type="checkbox" class="form-check-input" id="student-${studentId}" ${estudiante.presente === 1 ? 'checked' : ''}>
+              <label class="form-check-label" for="student-${studentId}" style="padding-left: 0;">
+                ${estudiante.nombre} ${estudiante.apellido}
+              </label>
+            </div>`;
+
+          // Actualizar el contenido HTML con el checkbox
+          item.innerHTML = checkbox;
+
+          // Asegurarse de que los elementos no mantengan el estilo de lista
+          item.style.listStyleType = "none"; // Eliminar el marcador de lista
+
+          // Eliminar cualquier margen o relleno adicional que esté afectando el diseño
+          item.style.margin = "0";
+          item.style.padding = "0";
+        } else {
+          // Volver a mostrar los puntos y asegurar que no hay estilos de lista previos
+          item.innerHTML = `<span>• ${estudiante.nombre} ${estudiante.apellido}</span>`;
+          item.style.listStyleType = "initial"; // Restaurar el marcador predeterminado de lista
+
+          // Restaurar margen y relleno predeterminados si es necesario
+          item.style.margin = "0 0 5px 0"; // Puedes ajustar el margen según tu preferencia
+          item.style.padding = "0";
+        }
+      });
+    }
+
+    // Función para formatear la fecha a "DD de MMMM del YYYY"
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+
+      const day = ("0" + date.getDate()).slice(-2);
+      const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+      const month = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+      return `${day} de ${month} del ${year}`;
+    }
+
+  // Función para editar la fecha
+document.getElementById("editFechaBtn").addEventListener("click", async function () {
+    const fechaEl = document.getElementById("modalFechaAsistencia");
+    const button = document.querySelector(`.btn-view[data-id_asistencia='${idAsistencia}']`);
+
+    if (!button) {
+        console.error("No se encontró el botón correspondiente.");
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "No se puede editar la fecha.",
+        });
+        return;
+    }
+
+    const existingInput = fechaEl.querySelector("input[type='date']");
+    if (existingInput) {
+        const nuevaFecha = existingInput.value;
+        if (isFutureDate(nuevaFecha)) {
+            Swal.fire({
+                icon: "warning",
+                title: "Fecha no válida",
+                text: "No se puede seleccionar una fecha futura.",
+            });
+            return;
+        }
+
+        if (isBeforeTwoMonths(nuevaFecha)) {
+            Swal.fire({
+                icon: "warning",
+                title: "Fecha no válida",
+                text: "No se puede seleccionar una fecha anterior a hace dos meses.",
+            });
+            return;
+        }
+
+        try {
+            const nuevaFechaUTC = convertToUTC(nuevaFecha);
+
+            const response = await fetch(`http://35.199.176.100/api/actualizar_asistencia/${idAsistencia}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fecha_asistencia: nuevaFechaUTC }),
+            });
+
+            if (!response.ok) throw new Error("Error al actualizar la fecha");
+
+            const result = await response.json();
+            Swal.fire({
+                icon: "success",
+                title: "Fecha actualizada",
+                text: result.message,
+            });
+
+            fechaEl.innerHTML = formatDate(nuevaFechaUTC);
+            button.dataset.fecha_asistencia = nuevaFechaUTC;
+        } catch (error) {
+            console.error("Error:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Error al guardar los cambios de la fecha.",
+            });
+        }
+    } else {
+        const fechaSinFormato = button.dataset.fecha_asistencia;
+
+        if (!fechaSinFormato) {
+            console.error("El valor de fecha_asistencia no está disponible.");
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se puede editar la fecha porque no está disponible.",
+            });
+            return;
+        }
+
+        const fechaFormateada = new Date(fechaSinFormato).toISOString().split("T")[0];
+        const fechaActual = new Date();
+        fechaActual.setHours(0, 0, 0, 0);
+        const fechaActualFormateada = convertToLocalDate(fechaActual);
+
+        const fechaLimite = new Date();
+        fechaLimite.setMonth(fechaLimite.getMonth() - 2);
+        const fechaLimiteFormateada = fechaLimite.toISOString().split("T")[0];
+
+        const inputFecha = `<input type="date" class="form-control" value="${fechaFormateada}" max="${fechaActualFormateada}" min="${fechaLimiteFormateada}" />`;
+
+        fechaEl.innerHTML = inputFecha;
+        const inputDateField = fechaEl.querySelector("input[type='date']");
+        inputDateField.max = fechaActualFormateada;
+        inputDateField.min = fechaLimiteFormateada;
+
+        inputDateField.addEventListener("change", function () {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate > today) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Fecha no válida",
+                    text: "No se puede seleccionar una fecha futura.",
+                });
+                this.value = fechaActualFormateada;
+            }
+
+            if (selectedDate < fechaLimite) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Fecha no válida",
+                    text: "No se puede seleccionar una fecha anterior a hace dos meses.",
+                });
+                this.value = fechaLimiteFormateada;
+            }
+        });
+    }
+});
+
+
+    // Función para convertir fecha a UTC
+    function convertToUTC(localDate) {
+      const localDateObj = new Date(localDate);
+      return new Date(localDateObj.getUTCFullYear(), localDateObj.getUTCMonth(), localDateObj.getUTCDate()).toISOString();
+    }
+
+    // Función para convertir a fecha local en formato 'YYYY-MM-DD'
+    function convertToLocalDate(date) {
+      const localDate = new Date(date);
+      const offset = -5; // Zona horaria de Colombia (UTC -5)
+      localDate.setHours(localDate.getHours() + offset);
+      return localDate.toISOString().split("T")[0];
+    }
+
+    // Función para verificar si la fecha es futura
+    function isFutureDate(fecha) {
+      const fechaSeleccionada = new Date(fecha);
+      const fechaHoy = new Date();
+      fechaHoy.setHours(0, 0, 0, 0);
+      return fechaSeleccionada > fechaHoy;
+    }
+
+    // Función para verificar si la fecha es anterior a hace dos meses
+    function isBeforeTwoMonths(fecha) {
+      const fechaSeleccionada = new Date(fecha);
+      const fechaLimite = new Date();
+      fechaLimite.setMonth(fechaLimite.getMonth() - 2);
+      return fechaSeleccionada < fechaLimite;
+    }
+
+
+    // Editar asistencia
+    document.getElementById("editButton").addEventListener("click", () => {
+      // Reemplazar puntos con checkboxes
+      toggleEditMode(true);
+
+      document.getElementById("editButton").style.display = "none";
+      document.getElementById("saveChangesButton").style.display = "block";
+    });
+
+    // Guardar cambios
+    document.getElementById("saveChangesButton").addEventListener("click", async () => {
+      const checkboxes = document.querySelectorAll(".form-check-input");
+      const cambiosDeAsistencia = [];
+
+      checkboxes.forEach((checkbox) => {
+        const idEstudiante = checkbox.id.split('-')[1]; // Asegúrate de que el id del checkbox sea correcto
+        const asistio = checkbox.checked ? 1 : 0;
+        cambiosDeAsistencia.push({ id_usuario: idEstudiante, presente: asistio });
+      });
+
+      try {
+        const response = await fetch(`http://35.199.176.100/api/actualizar_asistencia_estudiantes/`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id_asistencia: idAsistencia, cambios: cambiosDeAsistencia }),
+        });
+
+        if (!response.ok) throw new Error("Error al actualizar asistencia de estudiantes");
+
+        const result = await response.json();
+
+// SweetAlert de éxito
+Swal.fire({
+    icon: "success",
+    title: "¡Éxito!",
+    text: result.message,
+}).then(() => {
+    // Cerrar modal
+    const modal = new bootstrap.Modal(document.getElementById("viewModal"));
+    modal.hide();
+
+    // Reiniciar la página o cargar el contenido actualizado
+    location.reload(); // Recarga la página para actualizar los datos
+
+    // Alternativamente, si no quieres recargar la página, puedes resetear el estado de la vista aquí
+    document.getElementById("editButton").style.display = "block";
+    document.getElementById("saveChangesButton").style.display = "none";
+    toggleEditMode(false); // Esto quitaría los checkboxes si no quieres que se mantengan
+});
+} catch (error) {
+console.error("Error:", error);
+
+// SweetAlert de error
+Swal.fire({
+    icon: "error",
+    title: "Error",
+    text: "Error al actualizar asistencia de estudiantes",
+});
+}
+    });
+  });
+</script>
+
+
+  
+<!-- Modal para agregar asistencia -->
+<div class="modal fade" id="modalAsistencia" tabindex="-1" role="dialog" aria-labelledby="modalAsistenciaLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAsistenciaLabel">Registrar Asistencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formAsistencia">
+   
+          <!-- Campo de fecha -->
+          <div class="form-group">
+            <label for="fechaAsistencia">Fecha</label>
+            <input type="date" class="form-control" id="fechaAsistencia" required>
+          </div>
+
+          <!-- Campo de clase como un select -->
+          <div class="form-group">
+            <label for="id_clase">Clase:</label>
+            <select class="form-control" id="id_clase" name="id_clase" required>
+                <option value="" disabled selected>Seleccione una clase</option>
+                <% if (dataClases && dataClases.length) { %>
+                    <% dataClases.forEach(function(clase) { 
+                        if (clase.estado === 'activo') {
+                            function formatTimeTo12Hour(time) {
+                                let [hours, minutes] = time.split(":");
+                                let suffix = hours >= 12 ? "p.m." : "a.m.";
+                                hours = hours % 12 || 12; // Convertir a formato 12 horas
+                                return `${hours}:${minutes} ${suffix}`;
+                            }
+
+                            let startTime = formatTimeTo12Hour(clase.hora_inicio);
+                            let endTime = formatTimeTo12Hour(clase.hora_final);
+                            %>
+                            <option value="<%= clase.id_clase %>">
+                                <%= clase.nombre_curso %> - <%= startTime %> a <%= endTime %>
+                            </option>
+                            <% 
+                          } 
+                      }); %>
+                  <% } else { %>
+                      <option value="">No hay clases disponibles</option>
+                  <% } %>
+              </select>
+          </div>     
+
+          <!-- Contenedor de estudiantes -->
+          <div id="estudiantes_container" class="form-group">
+            <!-- Los checkboxes de estudiantes se agregarán aquí -->
+          </div>
+
+          <!-- Botón de envío -->
+          <button type="submit" class="btn btn-outline-primary">Registrar Asistencia</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const fechaAsistencia = document.getElementById('fechaAsistencia');
+    const idClase = document.getElementById('id_clase');
+    const estudiantesContainer = document.getElementById('estudiantes_container');
+
+    // Función para obtener estudiantes
+    async function obtenerEstudiantes() {
+      const idClaseSeleccionada = idClase.value;
+      const fechaSeleccionada = fechaAsistencia.value;
+
+      // Verificar que ambos campos tengan valores antes de realizar la consulta
+      if (!idClaseSeleccionada || !fechaSeleccionada) {
+        estudiantesContainer.innerHTML = '<p>Seleccione una clase y una fecha para ver los estudiantes.</p>';
+        return;
+      }
+
+      try {
+        // Hacer la consulta a la API con los parámetros id_clase y fecha_asistencia
+        const response = await fetch(`http://35.199.176.100/api/claseEstudiante/${idClaseSeleccionada}?fecha_asistencia=${fechaSeleccionada}`);
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const estudiantes = await response.json();
+
+        // Limpiar el contenedor de estudiantes
+        estudiantesContainer.innerHTML = '';
+
+        // Llenar la lista con los estudiantes obtenidos
+        if (estudiantes.length === 0) {
+          estudiantesContainer.innerHTML = '<p>No hay estudiantes disponibles para la fecha seleccionada.</p>';
+        } else {
+          estudiantes.forEach(estudiante => {
+            const checkboxHtml = `
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="estudiantes" id="estudiante-${estudiante.id_usuario}" data-estudiante-id="${estudiante.id_usuario}">
+                <label class="form-check-label" for="estudiante-${estudiante.id_usuario}">
+                  ${estudiante.nombre} ${estudiante.apellido}
+                </label>
+              </div>
+            `;
+            estudiantesContainer.innerHTML += checkboxHtml;
+          });
+        }
+      } catch (error) {
+        console.error('Error al obtener los estudiantes:', error);
+        estudiantesContainer.innerHTML = '<p>Error al cargar los estudiantes. Por favor, intente nuevamente.</p>';
+      }
+    }
+
+    // Agregar listeners para los campos de clase y fecha
+    idClase.addEventListener('change', obtenerEstudiantes);
+    fechaAsistencia.addEventListener('change', obtenerEstudiantes);
+
+    // Obtener la fecha de hoy y la fecha de hace dos meses
+    const today = new Date();
+    const twoMonthsAgo = new Date();
+    twoMonthsAgo.setMonth(today.getMonth() - 2);
+
+    // Función para formatear las fechas en formato YYYY-MM-DD
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Establecer los valores de fecha mínima y máxima
+    fechaAsistencia.setAttribute('min', formatDate(twoMonthsAgo)); // Hace dos meses
+    fechaAsistencia.setAttribute('max', formatDate(today)); // Hoy
+
+    // Manejo del formulario de asistencia
+    document.getElementById('formAsistencia').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const fechaSeleccionada = fechaAsistencia.value;
+      const idClaseSeleccionada = idClase.value;
+
+      // Obtener los estudiantes seleccionados
+      const allCheckboxes = document.querySelectorAll('input[name="estudiantes"]');
+      const estudiantes = Array.from(allCheckboxes).map(checkbox => ({
+        id_usuario: checkbox.dataset.estudianteId,
+        presente: checkbox.checked ? 1 : 0
+      }));
+
+      // Verificar que los campos no estén vacíos
+      if (!fechaSeleccionada || !idClaseSeleccionada) {
+        alert('Por favor, complete todos los campos.');
+        return;
+      }
+
+      const data = {
+        fecha_asistencia: fechaSeleccionada,
+        id_clase: idClaseSeleccionada,
+        estudiantes
+      };
+
+      try {
+        const response = await fetch('/crear_asistencia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.message || 'Error en el servidor');
+        }
+
+        // SweetAlert de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Asistencia registrada!',
+            text: result.message,
+        }).then(() => {
+            // Limpiar el formulario y la lista de estudiantes
+            document.getElementById('formAsistencia').reset();
+            estudiantesContainer.innerHTML = '';
+
+            // Recargar la vista
+            window.location.reload();
+        });
+    } catch (error) {
+        console.error('Error al enviar datos:', error);
+
+        // SweetAlert de error
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al enviar datos: ' + error.message,
+        });
+    }
+    });
+  });
+  // Obtener el select del filtro y las tarjetas de asistencia
+const filtroAsistencia = document.getElementById('filtroAsistencia');
+const cards = document.querySelectorAll('.card');
+
+// Obtener todos los nombres de cursos para agregarlos al select dinámicamente
+const cursos = Array.from(new Set(Array.from(cards).map(card => card.querySelector('h4').textContent.trim())));
+
+// Agregar las opciones al select
+cursos.forEach(curso => {
+  const option = document.createElement('option');
+  option.value = curso.toLowerCase();  // Usamos el nombre del curso en minúsculas para el filtro
+  option.textContent = curso;
+  filtroAsistencia.appendChild(option);
+});
+
+// Agregar un evento para filtrar las tarjetas cuando el usuario cambia el filtro
+filtroAsistencia.addEventListener('change', function() {
+  const filterValue = this.value.toLowerCase();
+
+  // Iterar sobre todas las tarjetas de asistencia
+  cards.forEach(card => {
+    // Obtener el nombre del curso de cada tarjeta
+    const nombreCurso = card.querySelector('h4').textContent.toLowerCase();
+
+    // Si el valor del filtro coincide con el nombre del curso, mostrar la tarjeta
+    if (filterValue === '' || nombreCurso.includes(filterValue)) {
+      card.style.display = 'block';  // Mostrar tarjeta si coincide
+    } else {
+      card.style.display = 'none';   // Ocultar tarjeta si no coincide
+    }
+  });
+});
+
+
+</script>
+
+
+
+
+
+  
+ 
+<style>
+ .card:active {
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.6);  
+  transform: scale(0.98);  
+  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;  
+}
+
+
+  #pagination button {
+  margin: 0 10px;
+}
+#pagination span {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+  .card .card-buttons {
+  position: relative;
+  z-index: 2; /* Asegura que los botones estén sobre la tarjeta */
+}
+
+  body {
+      --background-color: #18181B;
+      --text-color: #ffffff;
+      --card-background-color: rgba(255, 255, 255, .015);
+      --card-border-color: rgba(255, 255, 255, 0.1);
+      --card-box-shadow-1: rgba(0, 0, 0, 0.05);
+      --card-box-shadow-1-y: 3px;
+      --card-box-shadow-1-blur: 6px;
+      --card-box-shadow-2: rgba(0, 0, 0, 0.1);
+      --card-box-shadow-2-y: 8px;
+      --card-box-shadow-2-blur: 15px;
+      --card-label-color: #FFFFFF;
+      --card-icon-color: #D4D4D8;
+      --card-icon-background-color: rgba(255, 255, 255, 0.08);
+      --card-icon-border-color: rgba(255, 255, 255, 0.12);
+      --card-shine-opacity: .1;
+      --card-shine-gradient: conic-gradient(from 205deg at 50% 50%, rgba(16, 185, 129, 0) 0deg, #ff0000 25deg, rgba(52, 211, 153, 0.18) 295deg, rgba(16, 185, 129, 0) 360deg);
+      --card-line-color: #2A2B2C;
+      --card-tile-color: rgba(16, 185, 129, 0.05);
+      --card-hover-border-color: rgba(255, 255, 255, 0.2);
+      --card-hover-box-shadow-1: rgba(0, 0, 0, 0.04);
+      --card-hover-box-shadow-1-y: 5px;
+      --card-hover-box-shadow-1-blur: 10px;
+      --card-hover-box-shadow-2: rgba(0, 0, 0, 0.3);
+      --card-hover-box-shadow-2-y: 15px;
+      --card-hover-box-shadow-2-blur: 25px;
+      --card-hover-icon-color: #ff0000;
+      --card-hover-icon-background-color: rgb(255 0 0 / 10%);
+      --card-hover-icon-border-color: rgba(52, 211, 153, 0.2);
+      --blur-opacity: .01;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 tarjetas por fila */
+    grid-gap: 32px; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+  }
+  
+  
+  .card {
+    background-color: var(--background-color);
+    box-shadow: 0px var(--card-box-shadow-1-y) var(--card-box-shadow-1-blur) var(--card-box-shadow-1), 0px var(--card-box-shadow-2-y) var(--card-box-shadow-2-blur) var(--card-box-shadow-2), 0 0 0 1px var(--card-border-color);
+    padding: 56px 16px 16px 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow .25s;
+  
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 15px;
+      background-color: var(--card-background-color);
+    }
+  
+    .icon {
+      z-index: 2;
+      position: relative;
+      display: table;
+      padding: 8px;
+  
+              &::after {
+              content: '';
+              position: absolute;
+              inset: 4.5px;
+              border-radius: 50%;
+              background-color: rgb(255 0 0 / 8%);
+              border: 1px solid rgb(255 0 0 / 12%);
+              backdrop-filter: blur(2px);
+              transition: background-color .25s, border-color .25s;
+          }
+  
+      svg {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 24px;
+        height: 24px;
+        transform: translateZ(0);
+        color: var(--card-icon-color);
+        transition: color .25s;
+      }
+    }
+  
+    h4 {
+      z-index: 2;
+      position: relative;
+      margin: 12px 0 4px 0;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 2;
+      color: var(--card-label-color);
+    }
+  
+    p {
+      z-index: 2;
+      position: relative;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-color);
+    }
+  
+    .shine {
+      border-radius: inherit;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity .5s;
+  
+      &:before {
+        content: '';
+        width: 150%;
+        padding-bottom: 150%;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        bottom: 55%;
+        filter: blur(35px);
+        opacity: var(--card-shine-opacity);
+        transform: translateX(-50%);
+        background-image: var(--card-shine-gradient);
+      }
+    }
+  
+    .background {
+      border-radius: inherit;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      -webkit-mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+      mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+  
+      .tiles {
+        opacity: 0;
+        transition: opacity .25s;
+  
+        .tile {
+          position: absolute;
+          background-color: var(--card-tile-color);
+          animation-duration: 8s;
+          animation-iteration-count: infinite;
+          opacity: 0;
+  
+          &.tile-4,
+          &.tile-6,
+          &.tile-10 {
+            animation-delay: -2s;
+          }
+  
+          &.tile-3,
+          &.tile-5,
+          &.tile-8 {
+            animation-delay: -4s;
+          }
+  
+          &.tile-2,
+          &.tile-9 {
+            animation-delay: -6s;
+          }
+  
+          &.tile-1 {
+            top: 0;
+            left: 0;
+            height: 10%;
+            width: 22.5%;
+          }
+  
+          &.tile-2 {
+            top: 0;
+            left: 22.5%;
+            height: 10%;
+            width: 27.5%;
+          }
+  
+          &.tile-3 {
+            top: 0;
+            left: 50%;
+            height: 10%;
+            width: 27.5%;
+          }
+  
+          &.tile-4 {
+            top: 0;
+            left: 77.5%;
+            height: 10%;
+            width: 22.5%;
+          }
+  
+          &.tile-5 {
+            top: 10%;
+            left: 0;
+            height: 22.5%;
+            width: 22.5%;
+          }
+  
+          &.tile-6 {
+            top: 10%;
+            left: 22.5%;
+            height: 22.5%;
+            width: 27.5%;
+          }
+  
+          &.tile-7 {
+            top: 10%;
+            left: 50%;
+            height: 22.5%;
+            width: 27.5%;
+          }
+  
+          &.tile-8 {
+            top: 10%;
+            left: 77.5%;
+            height: 22.5%;
+            width: 22.5%;
+          }
+  
+          &.tile-9 {
+            top: 32.5%;
+            left: 50%;
+            height: 22.5%;
+            width: 27.5%;
+          }
+  
+          &.tile-10 {
+            top: 32.5%;
+            left: 77.5%;
+            height: 22.5%;
+            width: 22.5%;
+          }
+        }
+      }
+  
+      @keyframes tile {
+  
+        0%,
+        12.5%,
+        100% {
+          opacity: 1;
+        }
+  
+        25%,
+        82.5% {
+          opacity: 0;
+        }
+      }
+  
+      .line {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity .35s;
+  
+        &:before,
+        &:after {
+          content: '';
+          position: absolute;
+          background-color: var(--card-line-color);
+          transition: transform .35s;
+        }
+  
+        &:before {
+          left: 0;
+          right: 0;
+          height: 1px;
+          transform-origin: 0 50%;
+          transform: scaleX(0);
+        }
+  
+        &:after {
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          transform-origin: 50% 0;
+          transform: scaleY(0);
+        }
+  
+        &.line-1 {
+          &:before {
+            top: 10%;
+          }
+  
+          &:after {
+            left: 22.5%;
+          }
+  
+          &:before,
+          &:after {
+            transition-delay: .3s;
+          }
+        }
+  
+        &.line-2 {
+          &:before {
+            top: 32.5%;
+          }
+  
+          &:after {
+            left: 50%;
+          }
+  
+          &:before,
+          &:after {
+            transition-delay: .15s;
+          }
+        }
+  
+        &.line-3 {
+          &:before {
+            top: 55%;
+          }
+  
+          &:after {
+            right: 22.5%;
+          }
+        }
+      }
+    }
+  
+    &:hover {
+      box-shadow: 0px 3px 6px var(--card-hover-box-shadow-1), 0px var(--card-hover-box-shadow-2-y) var(--card-hover-box-shadow-2-blur) var(--card-hover-box-shadow-2), 0 0 0 1px var(--card-hover-border-color);
+  
+      .icon {
+        &::after {
+          background-color: var(--card-hover-icon-background-color);
+          border-color: var(--card-hover-icon-border-color);
+        }
+  
+        svg {
+          color: var(--card-hover-icon-color);
+        }
+      }
+  
+      .shine {
+        opacity: 1;
+        transition-duration: .5s;
+        transition-delay: 0s;
+      }
+  
+      .background {
+  
+        .tiles {
+          opacity: 1;
+          transition-delay: .25s;
+  
+          .tile {
+            animation-name: tile;
+          }
+        }
+  
+        .line {
+          opacity: 1;
+          transition-duration: .15s;
+  
+          &:before {
+            transform: scaleX(1);
+          }
+  
+          &:after {
+            transform: scaleY(1);
+          }
+  
+          &.line-1 {
+  
+            &:before,
+            &:after {
+              transition-delay: .0s;
+            }
+          }
+  
+          &.line-2 {
+  
+            &:before,
+            &:after {
+              transition-delay: .15s;
+            }
+          }
+  
+          &.line-3 {
+  
+            &:before,
+            &:after {
+              transition-delay: .3s;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .day-night {
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    opacity: .3;
+  
+    input {
+      display: none;
+  
+      &+div {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        position: relative;
+        box-shadow: inset 8px -8px 0 0 var(--text-color);
+        transform: scale(1) rotate(-2deg);
+        transition: box-shadow .5s ease 0s, transform .4s ease .1s;
+  
+        &:before {
+          content: '';
+          width: inherit;
+          height: inherit;
+          border-radius: inherit;
+          position: absolute;
+          left: 0;
+          top: 0;
+          transition: background-color .3s ease;
+        }
+  
+        &:after {
+          content: '';
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          margin: -3px 0 0 -3px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          box-shadow: 0 -23px 0 var(--text-color), 0 23px 0 var(--text-color), 23px 0 0 var(--text-color), -23px 0 0 var(--text-color), 15px 15px 0 var(--text-color), -15px 15px 0 var(--text-color), 15px -15px 0 var(--text-color), -15px -15px 0 var(--text-color);
+          transform: scale(0);
+          transition: all .3s ease;
+        }
+      }
+  
+      &:checked+div {
+        box-shadow: inset 20px -20px 0 0 var(--text-color);
+        transform: scale(.5) rotate(0deg);
+        transition: transform .3s ease .1s, box-shadow .2s ease 0s;
+  
+        &:before {
+          background: var(--text-color);
+          transition: background-color .3s ease .1s;
+        }
+  
+        &:after {
+          transform: scale(1);
+          transition: transform .5s ease .15s;
+        }
+      }
+    }
+  }
+  
+  html {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  * {
+    box-sizing: inherit;
+    &:before,
+    &:after {
+      box-sizing: inherit;
+    }
+  }
+  
+   Center
+  body {
+    min-height: 100vh;
+    display: flex;
+    font-family: 'Inter', Arial;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    overflow: hidden;
+  
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 0 -60% 65% -60%;
+      background-image: radial-gradient(ellipse at top, #ff0000 0%, var(--background-color) 50%);
+      opacity: var(--blur-opacity);
+    }
+  
+    .twitter {
+      position: fixed;
+      display: block;
+      right: 12px;
+      bottom: 12px;
+      svg {
+        width: 32px;
+        height: 32px;
+        fill: #fff;
+      }
+    }
+  }
+
+  /* Estilo básico para los checkboxes */
+.form-check-input {
+  border: 2px solid #dc3545; /* Color de borde rojo */
+  background-color: #ffffff; /* Fondo blanco */
+  height: 18px;
+  width: 18px;
+}
+
+/* Al marcar el checkbox */
+.form-check-input:checked {
+  background-color: #dc3545; /* Fondo rojo cuando está marcado */
+  border-color: #dc3545; /* Borde rojo cuando está marcado */
+}
+
+/* Estilo para cuando el checkbox tiene un hover */
+.form-check-input:hover {
+  background-color: #f5a5a5; /* Color claro cuando se pasa el mouse */
+  border-color: #f5a5a5; /* Borde claro cuando se pasa el mouse */
+}
+
+/* Estilo para el texto del label */
+.form-check-label {
+  font-size: 14px;
+  color: #333333; /* Texto oscuro para buen contraste */
+}
+
+</style>
+
+ 
+<!-- Footer Start -->
+<%- include('partials/footer') %>
+  <!-- Footer End -->
+       <!-- JavaScript Libraries -->
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+       <script src="c/lib/easing/easing.min.js"></script>
+       <script src="c/lib/waypoints/waypoints.min.js"></script>
+   
+       <!-- Contact Javascript File -->
+       <script src="c/mail/jqBootstrapValidation.min.js"></script>
+       <script src="c/mail/contact.js"></script>
+   
+       <!-- Template Javascript -->
+  
