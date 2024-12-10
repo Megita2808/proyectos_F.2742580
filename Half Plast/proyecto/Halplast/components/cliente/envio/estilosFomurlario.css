@@ -1,0 +1,139 @@
+
+.address-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 700px;
+  margin: 0 auto;
+  margin-top: 75px;
+  background-color: #f9f9f9;
+  padding: 45px;
+  border-radius: 8px;
+}
+  
+  .address-form__select, .address-form__grid input, .address-form__grid select, .address-form__rural input {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .address-form__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  
+  .address-form__summary {
+    margin-top: 1   0px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .address-form__disabled {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e9ecef;
+  }
+  
+  .address-form__submit {
+    background-color: rgb(116, 116, 255);
+    color: white;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 90%;
+  }
+  
+  .address-form__submit:hover {
+    background-color: #ba98ff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+  }
+  
+  .address-form__cancel {
+    background-color: #ff8077;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 90%;
+  }
+  
+  .address-form__cancel:hover {
+    background-color: #ffb3ae;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+  }
+  
+  .titleSinFondoModal {
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(116, 116, 255);
+    padding: 5px 10px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+    animation: zoomIn 0.5s ease-out;
+}
+  
+.titleSinFondoModal:hover {
+    color: rgb(255, 255, 255); 
+    background-color: rgba(116, 116, 255, 0.8);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+.botonEnviarDatosEnvio{
+  background-color: #e4ff6c;
+  color: black;
+  cursor: pointer;
+}
+
+.botonEnviarDatosEnvio:hover {
+  color: black; 
+  background-color: rgba(210, 255, 61, 0.8);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.botonCompletarDireccionEnvio {
+  background-color: #ffa85c;
+  color: black;
+  cursor: pointer;  
+}
+
+.botonCompletarDireccionEnvio:hover {
+  color: black; 
+  background-color: rgba(255, 123, 52, 0.8);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.botonLimpiarDireccionEnvio {
+  color: black;
+  cursor: pointer;
+}
+
+.botonLimpiarDireccionEnvio:hover {
+  color: black; 
+  transform: scale(1.15);
+}
+
+.inputUrbanizacion {
+  width: 60%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: rgb(216, 216, 216);
+}

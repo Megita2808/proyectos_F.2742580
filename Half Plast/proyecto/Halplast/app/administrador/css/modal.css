@@ -1,0 +1,361 @@
+.EditarModalBoton {
+    background-color: #ff4c4cb6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    outline: none;
+}
+
+.EditarModalBoton:hover {
+    background-color: #ffd95c;
+    transform: translateY(-2px);
+}
+
+.EditarModalBoton:active {
+    background-color: #ffce64;
+    transform: translateY(0);
+}
+
+.EditarModalBoton:focus {
+    box-shadow: 0 0 0 2px rgba(255, 239, 118, 0.5);
+}
+
+.LabelModal {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    color: #333;
+}
+
+.selectModal {
+    width: 100%; 
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.selectModal:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.selectModal option {
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+}
+
+.labelModalNombre {
+    font-size: '16px';
+    font-weight: '600';
+    margin-bottom: '8px';
+    display: 'block';
+    color: '#333';
+}
+  
+.CerrarModalBotonGeneral {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #ff8591;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+.CerrarModalBotonGeneral:hover {
+    background-color: #ff6f7e;
+}
+
+.botonEditarModal {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: rgba(116, 116, 255, 1);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+  
+.botonEditarModal:hover {
+    background-color: rgb(92, 92, 160);
+}
+
+.EditModal {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.ImageModal {
+    flex: 1;
+    margin: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 2px solid blue;
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+  
+.ModalDashboard {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: transparent;
+    border-radius: 8px;
+    max-width: 1600px;
+    margin: auto;
+    gap: 35px;
+}
+
+.ModalContentSinImagen {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.ModalContent {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.ModalContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+}
+  
+  .ModalDashboard h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.modal-abrir-imagen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    max-width: 80vw;
+    max-height: 80vh;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.imagen-modal {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.FormContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ImageContent {
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+    width: auto;
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    padding: 14px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    height: auto;
+}
+
+.ImageContent img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.imagen-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    border: 2px solid #919191;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.checkboxGroup {
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .checkboxGroup input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .checkboxGroup div {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .checkboxGroup div:before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(116, 116, 255, 0.8);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    background-color: white;
+    margin-right: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .checkboxGroup div:hover:before {
+    border-color: rgba(116, 116, 255, 1);
+    transform: scale(1.05);
+  }
+  
+  .checkboxGroup label {
+    color: #333;
+    font-size: 14px;
+    transition: color 0.3s ease;
+  }
+  
+  .checkboxGroup input[type="checkbox"]:checked + label:before {
+    background-color: rgba(116, 116, 255, 1);
+    border-color: rgba(116, 116, 255, 1);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+  }
+  
+  .checkboxGroup input[type="checkbox"]:checked + label:after {
+    content: '\2713'; 
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    color: rgb(211, 99, 255);
+    font-size: 11px; 
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+  
+.pagination-button {
+    background-color: rgba(116, 116, 255, 1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+  
+.pagination-button.active {
+    background-color: rgb(123, 123, 226);
+    transform: scale(1.1);
+}
+  
+.pagination-button:hover {
+    background-color: rgb(93, 93, 177);
+    transform: scale(1.05);
+}
+
+.titleSinFondoModal {
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(116, 116, 255);
+    padding: 5px 10px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+    animation: zoomIn 0.5s ease-out;
+}
+  
+.titleSinFondoModal:hover {
+    color: rgb(255, 255, 255); 
+    background-color: rgba(116, 116, 255, 0.8);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+  
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1; 
+    }
+}
+.ModalRoles {
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 50%;
+}
+
+.ModalContentRoles {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.ModalContentRoles h2 {
+    color: #333;
+    margin-bottom: 15px;
+}

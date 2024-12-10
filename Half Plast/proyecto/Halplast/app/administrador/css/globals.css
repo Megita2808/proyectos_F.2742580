@@ -1,0 +1,646 @@
+@import url("https://fonts.cdnfonts.com/css/satoshi");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @layer base {
+  body {
+ 
+  }
+} */
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .chat-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+  .inbox-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+}
+
+/* third-party libraries CSS */
+
+.tableCheckbox:checked ~ div span {
+  @apply opacity-100;
+}
+.tableCheckbox:checked ~ div {
+  @apply border-primary bg-primary;
+}
+
+.apexcharts-legend-text {
+  @apply !text-body dark:!text-bodydark;
+}
+.apexcharts-text {
+  @apply !fill-body dark:!fill-bodydark;
+}
+.apexcharts-xcrosshairs {
+  @apply !fill-stroke dark:!fill-strokedark;
+}
+.apexcharts-gridline {
+  @apply !stroke-stroke dark:!stroke-strokedark;
+}
+.apexcharts-series.apexcharts-pie-series path {
+  @apply dark:!stroke-transparent;
+}
+.apexcharts-legend-series {
+  @apply !inline-flex gap-1.5;
+}
+.apexcharts-tooltip.apexcharts-theme-light {
+  @apply dark:!border-strokedark dark:!bg-boxdark;
+}
+.apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+  @apply dark:!border-strokedark dark:!bg-meta-4;
+}
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+  @apply dark:!border-meta-4 dark:!bg-meta-4 dark:!text-bodydark1;
+}
+.apexcharts-xaxistooltip-bottom:after {
+  @apply dark:!border-b-meta-4;
+}
+.apexcharts-xaxistooltip-bottom:before {
+  @apply dark:!border-b-meta-4;
+}
+
+.flatpickr-day.selected {
+  @apply border-primary bg-primary hover:border-primary hover:bg-primary;
+}
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+  @apply fill-primary;
+}
+.flatpickr-calendar.arrowTop:before {
+  @apply dark:!border-b-boxdark;
+}
+.flatpickr-calendar.arrowTop:after {
+  @apply dark:!border-b-boxdark;
+}
+.flatpickr-calendar {
+  @apply !p-6 dark:!bg-boxdark dark:!text-bodydark dark:!shadow-8 2xsm:!w-auto;
+}
+.flatpickr-day {
+  @apply dark:!text-bodydark;
+}
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+  @apply !top-7 dark:!fill-white dark:!text-white;
+}
+.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month.flatpickr-prev-month {
+  @apply !left-7;
+}
+.flatpickr-months .flatpickr-prev-month.flatpickr-next-month,
+.flatpickr-months .flatpickr-next-month.flatpickr-next-month {
+  @apply !right-7;
+}
+span.flatpickr-weekday,
+.flatpickr-months .flatpickr-month {
+  @apply dark:!fill-white dark:!text-white;
+}
+.flatpickr-day.inRange {
+  @apply dark:!border-meta-4 dark:!bg-meta-4 dark:!shadow-7;
+}
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.selected,
+.flatpickr-day.endRange {
+  @apply dark:!text-white;
+}
+
+.map-btn .jvm-zoom-btn {
+  @apply flex h-7.5 w-7.5 items-center justify-center rounded border border-stroke bg-white px-0 pb-0.5 pt-0 text-2xl leading-none text-body hover:border-primary hover:bg-primary hover:text-white dark:border-strokedark dark:text-bodydark dark:hover:border-primary dark:hover:text-white;
+}
+.mapOne .jvm-zoom-btn {
+  @apply bottom-0 left-auto top-auto;
+}
+.mapOne .jvm-zoom-btn.jvm-zoomin {
+  @apply right-10;
+}
+.mapOne .jvm-zoom-btn.jvm-zoomout {
+  @apply right-0;
+}
+.mapTwo .jvm-zoom-btn {
+  @apply bottom-0 top-auto;
+}
+.mapTwo .jvm-zoom-btn.jvm-zoomin {
+  @apply left-0;
+}
+.mapTwo .jvm-zoom-btn.jvm-zoomout {
+  @apply left-10;
+}
+
+.taskCheckbox:checked ~ .box span {
+  @apply opacity-100;
+}
+.taskCheckbox:checked ~ p {
+  @apply line-through;
+}
+.taskCheckbox:checked ~ .box {
+  @apply border-primary bg-primary dark:border-primary;
+}
+
+.custom-input-date::-webkit-calendar-picker-indicator {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 20px;
+}
+.custom-input-date-1::-webkit-calendar-picker-indicator {
+  background-image: url("/images/icon/icon-calendar.svg");
+}
+.custom-input-date-2::-webkit-calendar-picker-indicator {
+  background-image: url("/images/icon/icon-arrow-down.svg");
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+.jvectormap-tip {
+  background-color: #f8fafc !important;
+  font-family: Satoshi, sans-serif;
+}
+
+.map-btn .jvectormap-container .jvectormap-zoomin,
+.map-btn .jvectormap-container .jvectormap-zoomout {
+  @apply bottom-0 left-auto right-0 top-auto flex h-7.5 w-7.5 items-center justify-center rounded border border-stroke bg-white px-0 pb-0.5 pt-0 text-2xl leading-none text-body hover:border-primary hover:bg-primary hover:text-white dark:border-strokedark dark:text-bodydark dark:hover:border-primary dark:hover:text-white;
+}
+
+.map-btn .jvectormap-container .jvectormap-zoomin {
+  right: 45px;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 142.1 76.2% 36.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 0 0% 95%;
+    --card: 24 9.8% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 144.9 80.4% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 142.4 71.8% 29.2%;
+  }
+}
+
+.Overlay {
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.CloseButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.CloseButton:hover {
+  background-color: #0056b3;
+}
+
+.botonAgregado {
+  left: 40px; 
+  margin-bottom: 20px;
+  background-color: #002a58; 
+  color: white;             
+  border: none;             
+  border-radius: 4px;       
+  padding: 6px 15px;        
+  font-size: 16px;         
+  cursor: pointer;           
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+  outline: none;            
+}
+
+.botonAgregado:hover {
+  background-color: #7bebff;
+  transform: translateY(-2px);
+}
+
+.botonAgregado:active {
+  background-color: #7bebff;
+  transform: translateY(0);
+}
+
+.botonAgregado:focus {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+.botonPDF {
+  position: absolute;
+  top: 173px;
+  right: 43px;
+  background-color: #ff4c4cb6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  outline: none;
+}
+
+.botonPDF:hover {
+  background-color: #ffd95c;
+  transform: translateY(-2px);
+}
+
+.botonPDF:active {
+  background-color: #ffce64;
+  transform: translateY(0);
+}
+
+.botonPDF:focus {
+  box-shadow: 0 0 0 2px rgba(255, 239, 118, 0.5);
+}
+
+.PaginadoBoton {
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  outline: none;
+}
+
+.PaginadoBoton:hover {
+  color: #6a86b2;
+  transform: translateY(-2px);
+}
+
+.PaginadoBoton:active {
+  color: #6889bf;
+  transform: translateY(0);
+}
+
+.formularioEditar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff, #e3eeff);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.formularioAgregar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff, #e3eeff);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.inputEditarForm {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  outline: none;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.switch-animation {
+  transition: background-color 0.3s ease;
+}
+
+.switch-checked {
+  background-color: transparent;
+}
+
+.switch-unchecked {
+  background-color: transparent;
+}
+
+.AccionesBotones {
+  display: flex;
+  align-items: center;
+}
+
+.AccionesBotones button {
+  background-color: #3396ff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; 
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+.AccionesBotones button:hover {
+  background-color: #1e2cc0;
+  transform: translateY(-2px);
+}
+
+.AccionesBotones button:active {
+  background-color: #261bc6;
+  transform: translateY(0);
+}
+
+.AccionesBotones button:focus {
+  box-shadow: 0 0 0 2px rgba(114, 255, 241, 0.5);
+}
+
+.AccionesBotones2 button {
+  background-color: #3396ff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; 
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+.AccionesBotones2 button {
+  background-color: #ff8a95;
+  margin-right: 0;
+}
+
+.AccionesBotones2 button:hover {
+  background-color: #ff0000;
+  transform: translateY(-2px);
+}
+
+.AccionesBotones2 button:active {
+  background-color: #ff0000;
+  transform: translateY(0);
+}
+
+.AccionesBotones2 button:focus {
+  box-shadow: 0 0 0 2px rgba(255, 147, 96, 0.5);
+}
+
+.TituloTabla {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.TableContainer {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.inputBuscador {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+  border-radius: 5px 5px 0 0;
+  border: 1px solid #ccc;
+}
+
+.paginacion {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.formulario-contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.formulario-contenedor input[type="text"],
+.formulario-contenedor input[type="file"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.formulario-contenedor input[type="text"] {
+  width: 100%;
+}
+
+.formulario-contenedor input[type="file"] {
+  background: #fff;
+  cursor: pointer;
+}
+
+.formulario-contenedor input[type="file"]::file-selector-button {
+  background: #134172;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.formulario-contenedor input[type="file"]::file-selector-button:hover {
+  background: #152a3f;
+}
+
+.imagenEditarMostrar {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: contain;  
+}
+
+.status-label {
+  transition: color 0.3s ease-in-out;
+}
+
+.status-label.enabled {
+  color: rgb(78, 200, 245);
+}
+
+.status-label.disabled {
+  color: rgb(217, 123, 65);
+}
+
+.container_Image {
+  --transition: 350ms;
+  --folder-W: 80px;
+  --folder-H: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px;
+  background: linear-gradient(135deg, #6dd5ed, #2193b0);
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  height: calc(var(--folder-H) * 1.7);
+  position: relative;
+}
+
+.folder_Image {
+  position: absolute;
+  top: -20px;
+  left: calc(50% - 60px);
+  animation: float 2.5s infinite ease-in-out;
+  transition: transform var(--transition) ease;
+}
+
+.folder_Image:hover {
+  transform: scale(1.05);
+}
+
+.folder_Image .front-side_Image,
+.folder_Image .back-side_Image {
+  position: absolute;
+  transition: transform var(--transition);
+  transform-origin: bottom center;
+}
+
+.folder_Image .back-side_Image::before,
+.folder_Image .back-side_Image::after {
+  content: "";
+  display: block;
+  background-color: white;
+  opacity: 0.5;
+  z-index: 0;
+  width: var(--folder-W);
+  height: var(--folder-H);
+  position: absolute;
+  transform-origin: bottom center;
+  border-radius: 15px;
+  transition: transform 350ms;
+  z-index: 0;
+}
+
+.container_Image:hover .back-side_Image::before {
+  transform: rotateX(-5deg) skewX(5deg);
+}
+.container_Image:hover .back-side_Image::after {
+  transform: rotateX(-15deg) skewX(12deg);
+}
+
+.folder_Image .front-side_Image {
+  z-index: 1;
+}
+
+.container_Image:hover .front-side_Image {
+  transform: rotateX(-40deg) skewX(15deg);
+}
+
+.folder_Image .tip_Image {
+  background: linear-gradient(135deg, #ff9a56, #ff6f56);
+  width: 80px;
+  height: 20px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: -10px;
+  z-index: 2;
+}
+
+.folde_Image .cover_Image {
+  background: linear-gradient(135deg, #ffe563, #ffc663);
+  width: var(--folder-W);
+  height: var(--folder-H);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.custom-file-upload_Image {
+  font-size: 1.1em;
+  color: #ffffff;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background var(--transition) ease;
+  display: inline-block;
+  width: 100%;
+  padding: 10px 35px;
+  position: relative;
+}
+
+.custom-file-upload_Image:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.custom-file-upload_Image input[type="file"] {
+  display: none;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}

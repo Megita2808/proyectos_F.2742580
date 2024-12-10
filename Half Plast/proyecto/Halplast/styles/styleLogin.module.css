@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Merriweather:ital@1&family=Roboto&display=swap');
+
+.loraFont {
+  font-family: 'Lora', serif;
+}
+
+.merriweatherFont {
+  font-family: 'Merriweather', serif;
+}
+
+.robotoFont {
+  font-family: 'Roboto', sans-serif;
+}
+
+.global_reset * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Lora', serif;
+}
+
+.bodyR {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('../public/product-placeholder.jpg');
+  background-size: cover;
+}
+
+.body_background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('../public/product-placeholder.jpg');
+  background-size: cover;
+}
+
+.container_form {
+  display: flex;
+  border-radius: 20px;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+  height: 500px;
+  max-width: 900px;
+  transition: all 1s ease;
+  margin: 10px;
+}
+
+.information{
+  width: 40%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  background-color: #dcf6f9;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.info_childs {
+  width: 100%;
+  padding: 0 30px;
+}
+
+.info_childs h2 {
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.info_childs p {
+  margin: 15px 0;
+  color: #555;
+}
+
+.info_childs button[type="submit"] {
+  background-color: transparent;
+  outline: none;
+  border: solid 2px #9191bd;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: #9191bd;
+  cursor: pointer;
+  transition: background-color .3s ease;
+}
+
+.info_childs button[type="submit"]:hover {
+  background-color: #9191bd;
+  border: none;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form_information {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  text-align: center;
+  background-color: #f8f8f8;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.form_information_childs{
+  padding: 0 30px;
+}
+
+.form_information_childs h2 {
+  color: #333;
+  font-size: 2rem;
+}
+
+.form_information_childs p {
+  color: #555;
+}
+
+
+.icons2 {
+  margin: 15px 0px;
+}
+
+.icons2 img {
+  position: relative;
+  border-radius: 100%;
+  padding: 0px;
+  cursor: pointer;
+  margin: 0 140px;
+  color: #9191bd;
+  border: solid thin #9191bd;
+  transition: background-color .3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.icons {
+  margin: 15px 0px;
+}
+
+.icons img {
+  position: relative;
+  border-radius: 100%;
+  padding: 0px;
+  cursor: pointer;
+  margin: 0 100px;
+  color: #9191bd;
+  border: solid thin #9191bd;
+  transition: background-color .3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.icons img:hover {
+  background-color: rgb(202, 202, 202);
+  color: #fff;
+}
+
+.form {
+  margin: 30px 0;
+}
+
+.form label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  padding: 0 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form label input{
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  color: #333;
+}
+
+.form label i {
+  color: #a7a7a7;
+}
+
+.form input[type="button"]{
+  background-color: #9191bd;
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form input[type="button"]:hover{
+  background-color: #7a7a9a;
+}
+
+.hide {
+  position: absolute;
+  transform: translateY(-400%);
+}
+
+/* RESPONSIVE FORM */
+@media screen and (max-width: 750px) {
+  .html-750 {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .html-580 {
+    font-size: 10px;
+  }
+
+  .container_form {
+    height: auto;
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .information,
+  .form_information {
+    width: 100%;
+    border-radius: 20px;
+    padding: 20px;
+  }
+
+  .information {
+    border-bottom-left-radius: 0px;
+  }
+
+  .form_information {
+    border-top-left-radius: 0px;
+  }
+
+  .icons {
+    justify-content: center;
+  }
+
+  .icons img {
+    margin: 10px;
+  }
+}

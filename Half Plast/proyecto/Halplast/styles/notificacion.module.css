@@ -1,0 +1,33 @@
+/* Notification.module.css */
+.notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+  }
+  
+  .notification.success {
+    background-color: #4caf50; /* Verde */
+  }
+  
+  .notification.error {
+    background-color: #f44336; /* Rojo */
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  

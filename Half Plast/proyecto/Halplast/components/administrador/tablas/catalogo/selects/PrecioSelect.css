@@ -1,0 +1,90 @@
+.precio-select-container {
+    width: 100%;
+    max-width: 300px;
+    margin: auto;
+  }
+  
+  .precio-item {
+    margin-bottom: 20px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .precio-item.expanded {
+    transform: scale(1.02);
+  }
+  
+  .precio-button {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(116, 116, 255, 1);;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .precio-button:hover {
+    background-color: rgb(123, 123, 193);;
+  }
+  
+  .precio-edit-form {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f0f0ff;
+    animation: slide-down 0.5s ease forwards;
+  }
+  
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .precio-select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .edit-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  .save-button, .cancel-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .save-button {
+    background-color: rgba(116, 116, 255, 1);;
+    color: white;
+  }
+  
+  .save-button:hover {
+    background-color: rgb(91, 91, 179);;
+  }
+  
+  .cancel-button {
+    background-color: #ff8591;
+    color: white;
+  }
+  
+  .cancel-button:hover {
+    background-color: #ff6f7e;
+  }
+  
