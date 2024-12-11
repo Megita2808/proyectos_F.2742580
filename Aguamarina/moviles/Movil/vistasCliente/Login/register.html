@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/vistasCliente/ClienteCSS/registrar.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+</head>
+<body>
+    <div class="registrar">
+        <form id="registrationForm">
+            <h1><img src="/vistasCliente/imagenes/Logosimbolo_color_-_Negativo_Mesa_de_trabajo_1.png" width="70px" alt=""></h1>
+            <div class="input-box">
+                <input type="text" placeholder="Cedula" id="cedula"
+                required>
+                <i class='bx bxs-user-circle'></i>
+            </div>
+            <div class="input-box">
+                <input type="text" placeholder="Nombre" id="nombre"
+                required>
+                <i class='bx bx-user' ></i>
+            </div>
+            <div class="input-box">
+                <input type="email" placeholder="Correo"id="correo"
+                required>
+                <i class='bx bx-envelope' ></i>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Contraseña" id="contrasena"
+                required>
+                <i class='bx bxs-lock' ></i>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Confirmar contraseña" id="ccontrasena"
+                required>
+                <i class='bx bxs-lock' ></i>
+            </div>
+            <div class="input-box">
+                <input type="text" placeholder="Direccion" id="direccion"
+                required>
+                <i class='bx bx-paper-plane' ></i>
+            </div>
+            <div class="input-box">
+                <input type="number" placeholder="Telefono" id="telefono"
+                required >
+                <i class='bx bx-phone-call'></i>
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox" id="recordarme">Recordarme</label>
+            </div>
+            <br>
+            <button type="button" class="btn" onclick="registrar()">Registrar</button>
+            <div class="register-link">
+                <p>Ya tienes cuenta?<a href="/vistasCliente/Login/login.html">Ingresar</a></p>
+            </div>
+        </form>
+        <script src="/vistasCliente/Clientejs/register.js"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ant-btn {
+    @apply bg-primary cursor-pointer;
+}
+
+.ant-table-cell {
+    @apply cursor-pointer dark:bg-white/15;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    @apply bg-primary border-primary
+}
+
+.ant-table-content {
+    @apply dark:bg-white/10
+}
+
+.ant-input-affix-wrapper, .ant-transfer-list-header {
+    @apply dark:bg-white/15 dark:text-white
+}
+
+.ant-input::placeholder {
+    @apply text-gray-400 dark:text-gray-500;
+}
+
+.ant-pagination-item-active {
+    @apply bg-primary text-white;
+}
+
+.ant-table-placeholder .ant-table-cell{
+    @apply dark:bg-dark-5
+}
+
+.ant-pagination-item {
+    @apply bg-gray-100 text-gray-800;
+}
+
+.ant-pagination-item:hover {
+    @apply bg-gray-300 text-gray-900;
+}
+
+.ant-table-selection-column {
+    @apply bg-primary/[.2]
+}
+
+.ant-table-row-selected .ant-table-cell {
+    @apply bg-green
+}
+
+.ant-table-thead .ant-table-cell{
+    @apply dark:bg-white/15;
+}
+
+.ant-table-cell .ant-table-cell-row-hover {
+    @apply bg-primary/[.5]
+}

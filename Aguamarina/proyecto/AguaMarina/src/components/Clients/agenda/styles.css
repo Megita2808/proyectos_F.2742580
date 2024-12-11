@@ -1,0 +1,47 @@
+/* Fondo del calendario */
+.rbc-calendar {
+    background-color: #f9f9f9;
+  }
+  
+  /* Día actual resaltado */
+  .rbc-current {
+    background-color: #e8f4ff;
+    border: 1px solid #007bff;
+  }
+  
+  /* Eventos con estilo personalizado */
+  .rbc-event {
+    background-color: #007bff !important;
+    color: white !important;
+    border-radius: 4px;
+  }
+  
+  /* Texto de contenido de los eventos */
+  .rbc-event-content {
+    font-weight: bold;
+  }
+  
+  /* Encabezado de cada columna de día */
+  .rbc-header {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Barra de herramientas */
+  .rbc-toolbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  /* Personaliza los botones de la barra de herramientas */
+  .rbc-btn-group button {
+    color: #007bff;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  

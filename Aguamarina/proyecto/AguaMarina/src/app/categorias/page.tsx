@@ -1,0 +1,27 @@
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import TableOne from "@/components/Tables/TableOne";
+import TableThree from "@/components/Tables/TableThree";
+import TableTwo from "@/components/Tables/TableTwo";
+import { fetchProducts } from "@/api/fetchs/get_productos";
+
+import { Metadata } from "next";
+import DefaultLayout from "@/components/Layouts/DefaultLaout";
+
+export const metadata: Metadata = {
+  title: "Next.js Tables Page | NextAdmin - Next.js Dashboard Kit",
+  description: "This is Next.js Tables page for NextAdmin Dashboard Kit",
+};
+
+const TablesPage = async() => {
+  return (
+    <DefaultLayout>
+      <Breadcrumb pageName="Categorías" />
+
+      <div className="flex flex-col gap-10">
+        <TableThree />
+      </div>
+    </DefaultLayout>
+  );
+};
+
+export default TablesPage;

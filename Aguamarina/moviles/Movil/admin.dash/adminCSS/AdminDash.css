@@ -1,0 +1,117 @@
+.botonazul {
+    appearance: button;
+    background-color: #0c7075;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 13px 19px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+   }
+   
+   .botonazul:after {
+    background-clip: padding-box;
+    background-color: #0F969C;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+   }
+   
+   .botonazul:main, .botonazul:focus {
+    user-select: auto;
+   }
+   
+   .botonazul:hover:not(:disabled) {
+    filter: brightness(1.1);
+   }
+   
+   .botonazul:disabled {
+    cursor: auto;
+   }
+   
+   .botonazul:active:after {
+    border-width: 0 0 0px;
+   }
+   
+   .botonazul:active {
+    padding-bottom: 10px;
+   }
+
+   
+.botoncasual {
+    width: 136px;
+    height: 46px;
+    color: #FFFFFF;
+    background-color: #0F969C;
+    border: 1px solid black;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 17px;
+    transition: .4s;
+  }
+  
+  .botoncasual:hover {
+    box-shadow: 5px 6px  #0c7075
+    ;
+  }
+
+
+
+
+  /*Acá termina */
+
+
+  
+  .inputCasual {
+    max-width: 190px;
+    height: 44px;
+    background-color: #05060f0a;
+    border-radius: .5rem;
+    padding: 0 1rem;
+    border: 2px solid transparent;
+    font-size: 1rem;
+    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s,background .2s cubic-bezier(.25,.01,.25,1) 0s;
+  }
+  
+  .labelCasual {
+    display: block;
+    margin-bottom: .3rem;
+    font-size: .9rem;
+    font-weight: bold;
+    color: #10403b;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+  }
+  
+  .inputCasual:hover, .inputCasual:focus, .inputCasual-group:hover .inputCasual {
+    outline: none;
+    border-color: #127369;
+  }
+  
+  .inputCasual-group:hover .labelCasual, .inputCasual:focus {
+    color: #05060fc2;
+  }
