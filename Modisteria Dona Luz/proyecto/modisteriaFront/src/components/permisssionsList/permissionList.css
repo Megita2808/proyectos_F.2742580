@@ -1,0 +1,6 @@
+.listaPermisos{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    padding: 10px;
+    text-align: center;
+}

@@ -1,0 +1,423 @@
+.parent-calendar {
+  width: 90%;
+  height: 92vh;
+  margin: 0 auto;
+  margin-bottom: 8rem;
+}
+.rbc-day-bg + .rbc-day-bg {
+  border-left: none;
+}
+div.rbc-event {
+  position: relative !important;
+  height: 30px;
+  border-radius: 0.7rem;
+}
+.cita-calendar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 0.3rem;
+  width: 100%;
+  height: 100%;
+}
+.rbc-button-link.rbc-show-more {
+  color: #fff;
+  margin-top: 5px;
+  transition: color 0.1s ease-in-out;
+  padding: 2px 5px;
+}
+.rbc-button-link.rbc-show-more:hover {
+  color: #b534e6;
+  background: #000;
+  margin-top: 5px;
+}
+.rbc-btn-group {
+  background-color: #222;
+  border-radius: 0.5rem;
+}
+.rbc-toolbar button {
+  color: #fff !important;
+}
+button.rbc-active {
+  color: #1e1e1e !important;
+}
+.rbc-toolbar-label {
+  text-transform: capitalize;
+}
+.rbc-day-bg {
+  background-color: #1e1e1e;
+  color: #fff;
+  border-radius: 0.15rem;
+}
+.rbc-day-bg.rbc-off-range-bg {
+  background-color: #2d2d2d;
+  color: #a9a9a9;
+  cursor: not-allowed;
+}
+.rbc-day-bg.rbc-today {
+  background-color: #b534e6;
+  color: #ffffff;
+  border: 2px solid #8a2bb8;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.rbc-date-cell {
+  font-weight: bolder;
+  font-size: 0.9rem;
+}
+.rbc-header {
+  background-color: #873780;
+}
+.rbc-header span {
+  font-size: 1rem;
+}
+div.rbc-time-slot {
+  background-color: #222020 !important;
+}
+.rbc-header.rbc-today {
+  background-color: #b534e6;
+}
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 2rem;
+  align-items: center;
+}
+.info-section article {
+  display: flex;
+  width: 60%;
+  gap: 25px;
+  justify-content: start;
+}
+.color-estado {
+  width: 20px;
+  height: 20px;
+}
+.add-insumos {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.textInputWrapper {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fcfcfc36;
+  transition: color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1) 0s;
+  width: 100%;
+}
+
+.event-options {
+  width: 250px;
+  padding: 1rem 0;
+  border-radius: 0.8rem;
+  background: radial-gradient(circle at center, #222222, #1a1a1a, #111111);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  color: #b7b7b7;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.inputs-container {
+  display: flex;
+  gap: 20px;
+}
+
+.inputs-container input {
+  accent-color: #9b59b6;
+}
+.select-imagenes {
+  display: flex;
+  margin-top: 40px;
+  justify-content: space-between;
+  align-items: center;
+}
+.event-options div {
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  justify-content: start;
+  padding: 0 60px;
+  padding-top: 4px;
+  gap: 5px;
+  align-items: start;
+  width: 100%;
+  height: 40px;
+  cursor: pointer;
+
+  transition: all 0.5s ease;
+}
+.event-options div:hover {
+  color: #fff;
+  scale: 1.1;
+}
+.event-options div:hover .info {
+  color: #3498db;
+}
+.event-options div:hover .error {
+  color: #e74c3c;
+}
+.event-options div:hover .edit {
+  color: #a13cd3;
+}
+.event-options div:hover .cotizar {
+  color: #27ae60;
+}
+.textInputWrapper:hover .textInputWrapper:focus {
+  color: white;
+}
+.error-fecha {
+  color: rgb(250, 24, 24);
+  margin-bottom: 1rem;
+  padding-left: 3px;
+}
+
+.cita-card {
+  max-width: 700px; /* Ancho amplio para mayor espacio */
+  margin: 2rem auto;
+  overflow: hidden;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.cita-card:hover {
+  transform: scale(1.02);
+}
+
+.cita-imagen img {
+  width: 80%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 20px;
+  border-bottom: 5px solid rgba(187, 14, 202, 0.6);
+  margin-left: 60px; /* Detalle visual */
+}
+
+.cita-info {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.campo {
+  background: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  display: flex;
+  gap: 10px;
+  width: 500px;
+  justify-content: start;
+  align-items: center;
+}
+
+.campo label {
+  color: #999;
+
+  font-size: 1rem;
+}
+
+.campo span {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Mejoras visuales */
+.campo:hover {
+  background-color: #282828;
+}
+
+.campo label::before {
+  content: "• ";
+  color: rgba(187, 14, 202, 0.6);
+}
+
+.objetivo-text {
+  overflow-wrap: break-word;
+  text-align: justify;
+  line-height: 1.6;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 15rem;
+  height: 15rem;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0 auto;
+  border-radius: 0.3rem;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.overlay-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.image-container:hover .overlay {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.insumo-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.insumo-nombre,
+.insumo-cantidad {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: radial-gradient(circle at center, #222222, #1a1a1a, #111111);
+  padding: 1.5rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  color: #fff;
+}
+
+.insumo-nombre label,
+.insumo-cantidad label {
+  font-size: 0.9rem;
+  color: #bb0eca; /* Color del texto decorativo */
+}
+
+.insumo-nombre span,
+.insumo-cantidad span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.rbc-toolbar button:hover {
+  color: black !important;
+  cursor: pointer;
+}
+
+.clickInsumo {
+  text-align: end;
+}
+
+/*CHECKBOX INSUMO*/
+.customCheckBoxHolder {
+  margin: 5px;
+  display: flex;
+}
+
+.customCheckBox {
+  width: fit-content;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 8px;
+  background-color: rgba(0, 0, 0, 0.16);
+  border-radius: 0px;
+  color: rgba(255, 255, 255, 0.7);
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 300ms;
+  transition-property: color, background-color, box-shadow;
+  display: flex;
+  height: 32px;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset,
+    rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
+  outline: none;
+  justify-content: center;
+  min-width: 55px;
+}
+
+.customCheckBox:hover {
+  background-color: #2c2c2c;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset,
+    rgba(255, 255, 255, 0.17) 0px -1px 1px 0px,
+    rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+}
+
+.customCheckBox .inner {
+  font-size: 18px;
+  font-weight: 900;
+  pointer-events: none;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 300ms;
+  transition-property: transform;
+  transform: translateY(0px);
+}
+
+.customCheckBox:hover .inner {
+  transform: translateY(-2px);
+}
+
+.customCheckBoxWrapper:first-of-type .customCheckBox {
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  border-right: 0px;
+}
+
+.customCheckBoxWrapper:last-of-type .customCheckBox {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  border-left: 0px;
+}
+
+.customCheckBoxInput {
+  display: none;
+}
+
+.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox {
+  background-color: #2d6737;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset,
+    rgba(255, 255, 255, 0.17) 0px -1px 1px 0px,
+    rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+}
+
+.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox .inner {
+  transform: translateY(-2px);
+}
+
+.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox:hover {
+  background-color: #34723f;
+  box-shadow: rgba(0, 0, 0, 0.26) 0px -4px 1px 0px inset,
+    rgba(255, 255, 255, 0.17) 0px -1px 1px 0px,
+    rgba(0, 0, 0, 0.15) 0px 3px 6px 2px;
+}
+
+.customCheckBoxWrapper .customCheckBox:hover .inner {
+  transform: translateY(-2px);
+}

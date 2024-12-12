@@ -1,0 +1,38 @@
+.customDataGrid {
+    margin: 0px 20px;
+    padding: 0px 10px;
+    height: 56vh;
+    width: 98%;
+  }
+  
+  .customDataGrid .MuiDataGrid-root {
+    border: none;
+  }
+  
+  .customDataGrid .MuiDataGrid-cell {
+    border-bottom: none;
+  }
+  
+  .customDataGrid .MuiDataGrid-columnHeaders {
+    background-color: #9c4dcc; /* Reemplaza con tu valor en colors.purple[500] */
+    border-bottom: none;
+    color: white;
+  }
+  
+  .customDataGrid .MuiDataGrid-virtualScroller {
+    background-color: #757575; /* Reemplaza con tu valor en colors.primary[400] */
+  }
+  
+  .customDataGrid .MuiDataGrid-footerContainer {
+    border-top: none;
+    background-color: #b0bec5; /* Reemplaza con tu valor en colors.primary[200] */
+  }
+  
+  .customDataGrid .MuiCheckbox-root {
+    color: #e1bee7 !important; /* Reemplaza con tu valor en colors.purple[200] */
+  }
+  
+  .customDataGrid .MuiDataGrid-toolbarContainer .MuiButton-text {
+    color: #eeeeee !important; /* Reemplaza con tu valor en colors.grey[100] */
+  }
+  

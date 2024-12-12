@@ -1,0 +1,14 @@
+.otp-input {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.6rem;
+  text-align: center;
+  border: 2px solid #ccc;
+  outline: none;
+  margin: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.otp-input:focus {
+  border-color: #9f06ff;
+}

@@ -1,0 +1,64 @@
+/* INPUT */
+.input-group {
+  position: relative;
+  margin-bottom: 30px;
+  text-align: start;
+
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input {
+  flex: 1;
+  height: 44px;
+  background-color: #05060f1c;
+  border-radius: 0.5rem;
+  padding: 0 1rem;
+  border: 2px solid transparent;
+  font-size: 1rem;
+  transition: border-color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1) 0s,
+    color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1) 0s,
+    background 0.2s cubic-bezier(0.25, 0.01, 0.25, 1) 0s;
+  padding-right: 30px; /* Espacio para el ícono de ojo */
+  font-family: "Comfortaa", sans-serif
+}
+
+.label {
+  display: block;
+  margin-bottom: .3rem;
+  font-size: .9rem;
+  font-weight: bold;
+  color: #05060f63;
+  transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+}
+
+.input:hover, .input:focus, .input-group:hover .input {
+  outline: none;
+  border-color: rgb(187, 14, 202);
+}
+
+.input-group:hover .label {
+  color: black;
+}
+
+
+.descripcion {
+  font-size: 12px;
+  margin-bottom: 50px;
+  color: black;
+  width: 100px;
+}
+
+.verPass {
+  position: absolute;
+  right: -30px;
+  top: 30%;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}

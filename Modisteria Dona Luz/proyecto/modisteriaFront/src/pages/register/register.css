@@ -1,0 +1,123 @@
+.contenedor {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  border-color: 10px solid #1f0909;
+}
+
+.yaCuenta{
+  color: #000;
+}
+
+.black {
+  color: #000;
+  font-weight: bold;
+  font-size: 55px;
+}
+
+.purple{
+  color: rgb(187, 14, 202);
+}
+
+.imagen {
+  margin-right: 140px;
+}
+
+.imagenForm {
+  width: 500px;
+}
+
+.form {
+  margin-right: 100px;
+  margin-top: 50px;
+}
+
+.separacionRegistro {
+  width: 160px;
+  position: relative;
+  bottom: 15px;
+  right: 65px;
+  height: 7px;
+  background-color: rgb(187, 14, 202);
+  border: 0;
+}
+
+/*VER CONTRASEÑA*/
+.verPass {
+  position: absolute;
+  right: 315px;
+  top: 730px;
+  cursor: pointer;
+  width: 25px;
+}
+
+.verPassConfirm {
+  position: absolute;
+  right: 315px;
+  top: 835px;
+  cursor: pointer;
+  width: 25px;
+}
+
+/*BOTON*/
+.btn-registro {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  padding: 0.9rem 2rem;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.05rem;
+  font-weight: 700;
+  font-size: 17px;
+  border-radius: 500px;
+  overflow: hidden;
+  color: ghostwhite;
+  background-color: rgb(187, 14, 202);
+  margin-top: 20px;
+  margin-right: 50px;
+}
+
+.btn-registro span {
+  position: relative;
+  z-index: 10;
+  transition: color 0.4s;
+}
+
+.btn-registro:hover span {
+  color: rgb(255, 255, 255);
+}
+
+.btn-registro::before,
+.btn-registro::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.btn-registro::before {
+  content: "";
+  background: #000;
+  width: 120%;
+  left: -10%;
+  transform: skew(30deg);
+  transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+}
+
+.btn-registro:hover::before {
+  transform: translate3d(100%, 0, 0);
+}
+
+.descripcion {
+  font-size: 12px;
+  margin-bottom: 50px;
+
+}
+
+

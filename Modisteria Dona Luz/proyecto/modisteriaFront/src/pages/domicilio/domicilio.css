@@ -1,0 +1,42 @@
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 2rem;
+  align-items: center;
+  font-family: "Arial", sans-serif;
+}
+
+.info-section div {
+  width: 60%;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-section article {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 0.5rem;
+}
+
+.color-estado {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.info-section span {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #d5d4d4;
+}
+
+.info-section p {
+  font-size: 0.95rem;
+  color: #fff;
+  margin: 0;
+  line-height: 1.5;
+}

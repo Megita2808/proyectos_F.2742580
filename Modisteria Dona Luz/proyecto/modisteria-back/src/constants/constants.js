@@ -1,0 +1,1 @@
+exports.STATE_PRENDAS_ACTIVO = 1;

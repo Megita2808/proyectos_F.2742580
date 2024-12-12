@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
+:root {
+  font-family: "Comfortaa", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: rgba(255, 255, 255, 0.87);
+  background-color: rgb(241, 235, 235);
+  background-color: #ffffff;
+  background-image: url("https://i.pinimg.com/564x/16/3d/ef/163deff1e4a3fe6345d64df7c0a0fae1.jpg");
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root,
+.app,
+.content {
+  width: 100%;
+  font-family: "Comfortaa", sans-serif;
+  scrollbar-color: rgba(219, 216, 219, 0.438) #222;
+  caret-color: rgb(187, 14, 202);
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.app {
+  display: flex;
+}
+.content {
+  flex-grow: 1;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+a {
+  font-weight: 500;
+  color: rgb(187, 14, 202);
+  text-decoration: inherit;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}

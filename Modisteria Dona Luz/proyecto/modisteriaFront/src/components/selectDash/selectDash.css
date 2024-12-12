@@ -1,0 +1,39 @@
+.selectDash {
+    max-width: 535px;
+    height: 44px;
+    background-color: #05060f0a;
+    border-radius: .5rem;
+    padding: 0 1rem;
+    border: 2px solid transparent;
+    font-size: 0.9rem;
+    color: white;
+    font-family: "Comfortaa", sans-serif;
+    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s,background .2s cubic-bezier(.25,.01,.25,1) 0s;
+}
+
+.labelSelectDash {
+    display: block;
+    margin-bottom: .3rem;
+    font-size: .9rem;
+    font-weight: bold;
+    color: #fcfcfc36;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+}
+
+.selectDash:hover, .selectDash:focus, .select-groupDash:hover .selectDash {
+    outline: none;
+    border-color: rgb(187, 14, 202);
+}
+
+.select-groupDash:hover .labelSelectDash, .selectDash:focus {
+    color: white;
+}
+
+.select-groupDash{
+    margin-bottom: 8px;
+}
+
+option{
+    color: rgb(255, 255, 255);
+    background-color: rgb(36, 35, 35);
+}

@@ -1,0 +1,34 @@
+.inputDash {
+    max-width: 535px;
+    height: 44px;
+    background-color: #05060f0a;
+    border-radius: .5rem;
+    padding: 0 1rem;
+    border: 2px solid transparent;
+    font-size: 0.9rem;
+    color: white;
+    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s,background .2s cubic-bezier(.25,.01,.25,1) 0s;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.labelDash {
+    display: block;
+    margin-bottom: .3rem;
+    font-size: .9rem;
+    font-weight: bold;
+    color: #fcfcfc36;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+}
+
+.inputDash:hover, .inputDash:focus, .input-groupDash:hover .inputDash {
+    outline: none;
+    border-color: rgb(187, 14, 202);
+}
+
+.input-groupDash:hover .labelDash, .inputDash:focus {
+    color: white;
+}
+
+.input-groupDash{
+    margin-bottom: 8px;
+}
